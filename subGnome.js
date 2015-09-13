@@ -5,8 +5,8 @@ const Gtk = imports.gi.Gtk;
 const Lang = imports.lang;
 const Webkit = imports.gi.WebKit;
 
-const HelloGNOME = new Lang.Class ({
-    Name: 'Hello GNOME',
+const SubGnome = new Lang.Class ({
+    Name: 'subGnome',
 
     // Create the application itself
     _init: function () {
@@ -33,7 +33,7 @@ const HelloGNOME = new Lang.Class ({
         // Create the application window
         this._window = new Gtk.ApplicationWindow  ({
             application: this.application,
-            title: "Welcome to GNOME",
+            title: "subGnome",
             default_height: 200,
             default_width: 400,
             window_position: Gtk.WindowPosition.CENTER });
@@ -43,7 +43,7 @@ const HelloGNOME = new Lang.Class ({
 
         // Put the web app into the webview
         this._webView.load_uri (GLib.filename_to_uri (GLib.get_current_dir() +
-            "/hellognome.html", null));
+            "/index.html", null));
 
         // Put the webview into the window
         this._window.add (this._webView);
@@ -55,5 +55,5 @@ const HelloGNOME = new Lang.Class ({
 });
 
 // Run the application
-let app = new HelloGNOME ();
+let app = new SubGnome ();
 app.application.run (ARGV);

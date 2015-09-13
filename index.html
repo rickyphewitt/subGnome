@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>subGnome</title>
+
+
+        <!--add in bootstrap/JS scripts -->
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+        <!-- jquery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+
+
+
+    </head>
+    <body>
+
+        <!--start bootstrap initial containser -->
+        <div id="mainContainer" class="container-fluid">
+            <div class="row">
+                <div id="sidebar" class="col-md-4 bg-info">
+                    <div id="credsInput">
+                        <h3>Subsonic Server Credentials</h3>
+                        <span>Server: <input id="subServer" type="text" value="http://subsonic:4040"></span><br />
+                        <span>Username: <input id="subUsername" type="text" value="username"></span> <br />
+                        <span>Password: <input id="subPassword"type="password" value="password"></span> <br />
+                        <span>
+                            <button id="checkServer" type="submit" value="checkServer" class="btn btn-default">Check Server</button>
+                        </span>
+                    </div><!--#credsInput-->
+
+                </div><!--#sidebar-->
+                <div id="mainContent" class="col-md-8 bg-primary">
+                    <p>mainContent</p>
+                </div><!--#mainContent-->
+            </div><!--.row-->
+        </div><!--#mainContainer-->
+        <div id="statusbar" class="bg-info" >
+            <p>statusbar</p>
+
+
+
+
+        </div><!--#statusbar-->
+
+
+
+
+    </body>
+    <!--custom JS -->
+    <script src="js/classes/SubsonicAPI.js"></script>
+
+    <script type="text/javascript">
+        console.log('test');
+
+        // $("#checkServer").click(function(){
+        //     var subAPI = new SubsonicAPI();
+        //     subAPI.getCreds();
+        //     console.log('Clicked');
+        // });
+    </script>
+
+</html>
