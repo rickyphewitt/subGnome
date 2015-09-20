@@ -15,7 +15,8 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-
+        <!--player script -->
+        <!--<script src="js/classes/player.js"></script>-->
 
 
 
@@ -45,10 +46,9 @@
                    <p id="albumList"><!--placeholder for artist info --></p>
                    <p id="albumSongList"><!--placeholder for album info --></p>
                     <div id="playerWrap">
-                    <audio id="player" controls>
-                    Your browser does not support the audio element.
-                    </audio>
+
                     </div><!--playerWrap-->
+                    <div id="playlist"><!--placeholder for playlist--></div><!--#currentPlaylist-->
                 </div><!--#mainContent-->
             </div><!--.row-->
         </div><!--#mainContainer-->
@@ -66,5 +66,12 @@
     </body>
     <!--custom JS -->
     <script src="js/classes/SubsonicAPI.js"></script>
+    <script src="js/classes/player.js"></script>
+    <script>
+                    $(document).ready(function(){
+                        var player = new Player();
+                        $('#playerWrap').html(player.defaultPlayer('noContent'));
+                    });
+    </script>
 
 </html>
