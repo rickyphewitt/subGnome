@@ -36,9 +36,19 @@
                         </span>
                     </div><!--#credsInput-->
 
+                    <div id="artistInfo">
+                        <p id="artistReplace"><!--placeholder for artist --></p>
+                    </div><!--#artistInfo-->
+
                 </div><!--#sidebar-->
                 <div id="mainContent" class="col-md-8 bg-primary">
-                    <p>mainContent</p>
+                   <p id="albumList"><!--placeholder for artist info --></p>
+                   <p id="albumSongList"><!--placeholder for album info --></p>
+                    <div id="playerWrap">
+                    <audio id="player" controls>
+                    Your browser does not support the audio element.
+                    </audio>
+                    </div><!--playerWrap-->
                 </div><!--#mainContent-->
             </div><!--.row-->
         </div><!--#mainContainer-->
@@ -56,15 +66,5 @@
     </body>
     <!--custom JS -->
     <script src="js/classes/SubsonicAPI.js"></script>
-
-    <script type="text/javascript">
-        console.log('test');
-
-        // $("#checkServer").click(function(){
-        //     var subAPI = new SubsonicAPI();
-        //     subAPI.getCreds();
-        //     console.log('Clicked');
-        // });
-    </script>
 
 </html>
