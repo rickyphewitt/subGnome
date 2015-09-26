@@ -24,25 +24,39 @@
     <body>
 
         <!--start bootstrap initial containser -->
+        <div id="statusContainer" class="container-fluid">
+            <div class="row">
+                <div id="statusbar" class="bg-info col-lg-12" >
+                     <span id="showSettings" class="glyphicon glyphicon-menu-down panel panel-default"></span>
+                </div><!--#statusbar-->
+            </div><!--.row-->
+        </div><!--#statusContainer-->
         <div id="mainContainer" class="container-fluid">
             <div class="row">
-                <div id="sidebar" class="col-md-4 bg-info">
-                    <div id="credsInput">
+                <div id="sidebar" class="col-md-2 bg-info">
+                    <div id="settings">
                         <h3>Subsonic Server Credentials</h3>
-                        <span>Server: <input id="subServer" type="text" value="http://subsonic:4040"></span><br />
-                        <span>Username: <input id="subUsername" type="text" value=""></span> <br />
-                        <span>Password: <input id="subPassword"type="password" value=""></span> <br />
-                        <span>
-                            <button id="checkServer" type="submit" value="checkServer" class="btn btn-default">Check Server</button>
-                        </span>
-                    </div><!--#credsInput-->
+                        <div class="form-group">
+                            <label for="subServer">Server Address</label>
+                            <input id="subServer" type="text" value="http://subsonic:4040">
+                        </div>
+                        <div class="form-group">
+                            <label for="subUsername">Username</label>
+                            <input id="subUsername" type="text" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="subPassword">Password</label>
+                            <input id="subPassword"type="password" value="">
+                        </div>
+                        <button id="checkServer" type="submit" value="checkServer" class="btn btn-default">Check Server</button>
+                    </div><!--#settings-->
 
                     <div id="artistInfo">
                         <p id="artistReplace"><!--placeholder for artist --></p>
                     </div><!--#artistInfo-->
 
                 </div><!--#sidebar-->
-                <div id="mainContent" class="col-md-8 bg-primary">
+                <div id="mainContent" class="col-md-10 bg-primary">
                    <p id="albumList"><!--placeholder for artist info --></p>
                    <p id="albumSongList"><!--placeholder for album info --></p>
                     <div id="playerWrap">
@@ -57,13 +71,7 @@
                 </div><!--#mainContent-->
             </div><!--.row-->
         </div><!--#mainContainer-->
-        <div id="statusbar" class="bg-info" >
-            <p>statusbar</p>
-
-
-
-
-        </div><!--#statusbar-->
+        
 
 
 
@@ -72,11 +80,6 @@
     <!--custom JS -->
     <script src="js/classes/SubsonicAPI.js"></script>
     <script src="js/classes/player.js"></script>
-    <script>
-                    // $(document).ready(function(){
-                    //     var player = new Player();
-                    //     $('#playerWrap').html(player.defaultPlayer('noContent'));
-                    // });
-    </script>
+    <script src="js/misc.js"></script>
 
 </html>

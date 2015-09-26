@@ -29,6 +29,8 @@ function SubsonicAPI() {
                     $("#statusbar").addClass("bg-success").removeClass("bg-info");
                     //set connected to server as true
                     subAPI.connectedToServer = true;
+                    //hide the credentials
+                    $("#settings").toggle("slow");
                     //get the artist data
                     subAPI.getArtists(subAPI);
 
@@ -189,11 +191,11 @@ function SubsonicAPI() {
 
     //builds a list of id to artists from json
     this.buildArtistView = function(artistJson) {
-        var htmlToReturn = '<ul id="artistList">';
+        var htmlToReturn = '<ul id="artistList" class="list-unstyled">';
         //loop over the first list, A, B, C, ect
         $.each(artistJson, function(index, artistArray) {
             //add letter as additional li
-            htmlToReturn += '<ul id="artist' + artistArray.name + '">' + artistArray.name;
+            htmlToReturn += '<ul id="artist' + artistArray.name + '" class="list-unstyled">' + artistArray.name;
             //console.log(artistArray.name);
             //now loop thrown the artist array
             $.each(artistArray, function(x, artists) {
