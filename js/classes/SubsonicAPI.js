@@ -50,13 +50,13 @@ function SubsonicAPI() {
         } else {
             //looking to make this url
             //http://subsonic:4040/rest/getIndexes.view?u=username&p=pass&c=subGnome&v=1.13.1&f=json
-             var getURL = this.URL('getIndexes.view'); 
+             var getURL = this.URL('getArtists.view'); 
             //this.server + '/rest/' + view + '?u=' + this.username + '&p=' + this.password + '&c=subGnome' + '&v=1.13.1&f=json';
             console.log('url: ' + getURL);
             $.get(getURL, function(data) {
                     if(data['subsonic-response'].status == 'ok') {
                         //console.log(data['subsonic-response']);
-                        var artistHtml = subAPI.buildArtistView(data['subsonic-response'].indexes.index);
+                        var artistHtml = subAPI.buildArtistView(data['subsonic-response'].artists.index);
                         $("#artistReplace").replaceWith(artistHtml);
                         //set click event on artists
                         setArtistNameClickEvent();
