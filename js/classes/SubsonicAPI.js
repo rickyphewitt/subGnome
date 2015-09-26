@@ -144,15 +144,27 @@ function SubsonicAPI() {
     //play a full album
     this.playAlbum = function(subAPI, playAlbumId) {
         console.log('play: ' + playAlbumId);
-        var audio = $("#player");
-        var streamQ = $('#' + playAlbumId).html();
-        console.log('streamQ' + streamQ);
-        var playerHTML =  '<audio id="player" controls> ' + streamQ + '</audio>';
-        $("#playerWrap").html(playerHTML);
-        audio.text(streamQ);
-        audio[0].pause();
-        audio[0].load();
-        audio[0].oncanplaythrough = audio[0].play();
+        //gets the album play list html
+        var albumPlayList = $("#albumSongList").html();
+        //set it to the playlist area
+        $("#playlist").html(albumPlayList);
+        //set the first one as the source, and add the active class
+        
+        //gets existing player element
+        var player = $("#player");
+        //sets sources to new song
+
+        //var streamQ = $('#' + playAlbumId).html();
+        //console.log('streamQ' + streamQ);
+        //var emptyPlayer = new Player();
+
+        //var playerHTML = player.defaultPlayer(emptyPlayer.newSong($("#playlist li").first().attr("streamURL"), $("#playlist li").first().attr("streamType")));
+        setExistingPlayerSource("#nowPlayingSource", $("#playlist li").first().attr("streamURL"), $("#playlist li").first().attr("streamType"));
+
+        //set this as active 
+        $("#playlist li").first().addClass("text-success");
+        
+        startNewSong("#player");
     }
 
 
@@ -163,10 +175,10 @@ function SubsonicAPI() {
         var songListHtml = '<ul id="albumSongList">';
         $.each(songJson, function(index, song) {
             //this html will be visible by the user
-            songListHtml += '<li id="' + song.id + '" class="songName">' + song.title + '</li>';
+            songListHtml += '<li id="' + song.id + '" class="songName" streamURL="' + subAPI.URL('stream.view', song.id) + '" streamType="' + song.contentType + '">' + song.title + '</li>';
             //this html5 audo info will not be visible to the user, but will be used to play
             //the album 
-            albumPlayQueueHtml += '<source id="song' + song.id + '"src="' + subAPI.URL('stream.view', song.id) + '" type="' + song.contentType+ '">';
+            albumPlayQueueHtml += '<li id="song' + song.id + '"src="' + subAPI.URL('stream.view', song.id) + '" type="' + song.contentType+ '">';
         });
         songListHtml += '</ul>';
         var htmlToReturnArray = [songListHtml, albumPlayQueueHtml];
@@ -214,7 +226,7 @@ function SubsonicAPI() {
         $.each(albumJson, function(index, album) {
             htmlToReturn += '<li id="' + album.id + '" class="link, albumName">' + album.name + 
                             '<span id="playAlbum' + album.id + '" class="hidden"><!--albumPlayQueueContentHere--></span>'+
-                            '</li><span id="'+ album.id +'" class="link glyphicon glyphicon-play albumPlay left"></span>';
+                            '</li><span id="'+ album.id +'" class="link glyphicon glyphicon-play albumPlay right"></span>';
             console.log(album.name);
         })
         htmlToReturn += '</ul>';
@@ -301,3 +313,4 @@ function setAlbumPlayClickEvent() {
 
     });
 }
+

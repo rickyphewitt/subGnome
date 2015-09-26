@@ -15,7 +15,8 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-
+        <!--player script -->
+        <!--<script src="js/classes/player.js"></script>-->
 
 
 
@@ -29,8 +30,8 @@
                     <div id="credsInput">
                         <h3>Subsonic Server Credentials</h3>
                         <span>Server: <input id="subServer" type="text" value="http://subsonic:4040"></span><br />
-                        <span>Username: <input id="subUsername" type="text" value="username"></span> <br />
-                        <span>Password: <input id="subPassword"type="password" value="password"></span> <br />
+                        <span>Username: <input id="subUsername" type="text" value=""></span> <br />
+                        <span>Password: <input id="subPassword"type="password" value=""></span> <br />
                         <span>
                             <button id="checkServer" type="submit" value="checkServer" class="btn btn-default">Check Server</button>
                         </span>
@@ -45,10 +46,14 @@
                    <p id="albumList"><!--placeholder for artist info --></p>
                    <p id="albumSongList"><!--placeholder for album info --></p>
                     <div id="playerWrap">
-                    <audio id="player" controls>
-                    Your browser does not support the audio element.
+                    <audio id="player" preload="auto" controls autoplay>
+                        <source id="nowPlayingSource" src="noContent" type="mp3" />
                     </audio>
+                    <span id="playerPrev" class="glyphicon glyphicon-step-backward"></span>
+                    <span id="playerNext" class="glyphicon glyphicon-step-forward"></span>
+
                     </div><!--playerWrap-->
+                    <div id="playlist"><!--placeholder for playlist--></div><!--#currentPlaylist-->
                 </div><!--#mainContent-->
             </div><!--.row-->
         </div><!--#mainContainer-->
@@ -66,5 +71,12 @@
     </body>
     <!--custom JS -->
     <script src="js/classes/SubsonicAPI.js"></script>
+    <script src="js/classes/player.js"></script>
+    <script>
+                    // $(document).ready(function(){
+                    //     var player = new Player();
+                    //     $('#playerWrap').html(player.defaultPlayer('noContent'));
+                    // });
+    </script>
 
 </html>
