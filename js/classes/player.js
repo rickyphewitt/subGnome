@@ -103,3 +103,10 @@ $("#playerPrev").click(function() {
 	playNextPrevious("#playlist", "prev");
 	startNewSong("#player");
 });
+
+//click events for ended song
+$("#player").bind('ended', function(){
+	console.log('SongEnded');
+    playNextPrevious("#playlist", "next");
+	startNewSong("#player");
+});

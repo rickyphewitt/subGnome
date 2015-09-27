@@ -124,6 +124,8 @@ function SubsonicAPI() {
                     $('#playAlbum' + albumId).html(songHtml[1])
                     //set album play click event
                     setAlbumPlayClickEvent();
+                    //mark currently selected album
+                    $("#" + albumId).addClass("text-success");
 
                 } else {
                    console.log('Failed to get Artist in function: getArtistInfo');
@@ -156,12 +158,7 @@ function SubsonicAPI() {
         var player = $("#player");
         //sets sources to new song
 
-        //var streamQ = $('#' + playAlbumId).html();
-        //console.log('streamQ' + streamQ);
-        //var emptyPlayer = new Player();
-
-        //var playerHTML = player.defaultPlayer(emptyPlayer.newSong($("#playlist li").first().attr("streamURL"), $("#playlist li").first().attr("streamType")));
-        setExistingPlayerSource("#nowPlayingSource", $("#playlist li").first().attr("streamURL"), $("#playlist li").first().attr("streamType"));
+       setExistingPlayerSource("#nowPlayingSource", $("#playlist li").first().attr("streamURL"), $("#playlist li").first().attr("streamType"));
 
         //set this as active 
         $("#playlist li").first().addClass("text-success");
@@ -223,12 +220,13 @@ function SubsonicAPI() {
 
      //builds the album list
      this.buildAlbumView = function(albumJson) {
-        var htmlToReturn = '<ul id="albumList">';
+        var htmlToReturn = '<ul id="albumList" class="list-unstyled">';
         //loop over the albums and order them
         $.each(albumJson, function(index, album) {
-            htmlToReturn += '<li id="' + album.id + '" class="link, albumName">' + album.name + 
+            htmlToReturn += '<span class="link glyphicon glyphicon-play albumPlay pull-left"></span>' + 
+                            '<li id="album' + album.id +'" albumId="' + album.id +'" class="link albumName list-unstyled ">' + album.name + 
                             '<span id="playAlbum' + album.id + '" class="hidden"><!--albumPlayQueueContentHere--></span>'+
-                            '</li><span id="'+ album.id +'" class="link glyphicon glyphicon-play albumPlay right"></span>';
+                            '</li>';
             console.log(album.name);
         })
         htmlToReturn += '</ul>';
@@ -252,7 +250,15 @@ function SubsonicAPI() {
         return this.server + '/rest/' + view + '?u=' + this.username + '&p=' + this.password + '&id=' + id + '&c=subGnome' + '&v=1.13.1&f=json';
     }
 
+
+    //gets id of album
+    this.getAlbumIdFromId = function(id) {
+        return $("#" + id).closest("li").attr("albumId");
+    }
+
 }
+
+
 
 
 
@@ -271,11 +277,11 @@ $("#checkServer").click(function() {
 function setArtistNameClickEvent() {
     //click event that is added to each artist to return albums when clicked
     $(".artistName").click(function() {
-        
+        $("#artistList").find(".text-success").removeClass("text-success");
         var subAPI = new SubsonicAPI();
         subAPI.getCreds();
         subAPI.getArtistInfo(subAPI, $(this).attr("id"))
-
+        $("#" + $(this).attr("id")).addClass("text-success");
     });
 
 }
@@ -285,9 +291,13 @@ function setAlbumNameClickEvent() {
     //click event that is added to each album to return songs when clicked
     $(".albumName").click(function() {
         
+        //remove existing chosen album css
+        $("#albumList").find(".text-success").removeClass("text-success");
         var subAPI = new SubsonicAPI();
+        var albumId = subAPI.getAlbumIdFromId($(this).attr("id"));
         subAPI.getCreds();
-        subAPI.getAlbumInfo(subAPI, $(this).attr("id"))
+        subAPI.getAlbumInfo(subAPI, albumId);
+        $("#" + $(this).attr("id")).addClass("text-success");
 
     });
 }
@@ -309,9 +319,12 @@ function setAlbumPlayClickEvent() {
     //click event that is added to each song to play song when clicked
     $(".albumPlay").click(function() {
         console.log('playAlbumClick');
+
         var subAPI = new SubsonicAPI();
+        //get the album id
+        var albumId = subAPI.getAlbumIdFromId($(this).attr("id"));
         subAPI.getCreds();
-        subAPI.playAlbum(subAPI, 'playAlbum' + $(this).attr("id"))
+        subAPI.playAlbum(subAPI, 'playAlbum' + albumId)
 
     });
 }
