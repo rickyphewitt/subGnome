@@ -1,17 +1,25 @@
 function SubsonicAPI() {
-    this.server = "";
-    this.username = "";
-    this.password = "";
-    this.connectedToServer = false;
-    this.albumPlayQueue = "";
+    this.server             = "";
+    this.username           = "";
+    this.password           = "";
+    this.connectedToServer  = false;
+    this.albumPlayQueue     = "";
+    this.token              = "";
+    this.salt               = "";
 
 
     //retreives creds from the userinput form
+    //and creates the token/salt for the user auth
     //@toDo add validation
     this.getCreds = function() {
         this.server = $('#subServer').val();
         this.username = $('#subUsername').val();
         this.password = $('#subPassword').val();
+        
+        //generate rando string for salt and add time in microseconds for noise
+        this.salt = Math.random().toString(36).substring(7) + $.now();
+        this.token = $.md5(this.password + this.salt);
+
     }
 
     //connects (pings the server with the creds
@@ -242,12 +250,12 @@ function SubsonicAPI() {
 
     //returns a url for the api based on view
     this.URL = function(view) {
-        return this.server + '/rest/' + view + '?u=' + this.username + '&p=' + this.password + '&c=subGnome' + '&v=1.13.1&f=json';
+        return this.server + '/rest/' + view + '?u=' + this.username + '&t=' + this.token + '&s=' + this.salt + '&c=subGnome' + '&v=1.13.1&f=json';
     }
 
     //returns a url for the api based on view, and an ID
     this.URL = function(view, id) {
-        return this.server + '/rest/' + view + '?u=' + this.username + '&p=' + this.password + '&id=' + id + '&c=subGnome' + '&v=1.13.1&f=json';
+        return this.server + '/rest/' + view + '?u=' + this.username + '&t=' + this.token + '&s=' + this.salt + '&id=' + id + '&c=subGnome' + '&v=1.13.1&f=json';
     }
 
 
