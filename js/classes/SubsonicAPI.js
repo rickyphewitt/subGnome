@@ -274,6 +274,9 @@ function SubsonicAPI() {
 
 //Click bind events for class start here
 $("#checkServer").click(function() {
+    //put up loading gif
+    $("#loginLoading").toggle();
+    console.log('loadingImage');
     var subAPI = new SubsonicAPI();
     subAPI.getCreds();
     //now send a check to the server

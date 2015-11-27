@@ -1,0 +1,39 @@
+/*This is the main style sheet where base styles are set */
+
+
+
+/******Theme Colors ********/
+/*Brown #594F4F*/
+.background {
+	background-color: #594F4F;
+	}
+/*Blue #547980*/
+.foreground {
+	background-color: #45ADA8;
+}
+.primaryText {
+	color: #547980;
+}
+.secondaryText {
+	color: #9DE0AD;
+}
+
+
+.secondaryBackground {
+	background-color: #9DE0AD;
+}
+/*GreenBlue #45ADA8*/
+/*PastelGreen #9DE0AD*/
+/*YellowGreen #E5FCC2*/
+
+
+.textCenter {
+	text-align: center;
+}
+
+.loading {
+	height: 20px;
+}
+
+
+

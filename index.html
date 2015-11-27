@@ -18,45 +18,77 @@
         <!--md5 jquery plugin thanks-> blueimp:  https://github.com/placemarker/jQuery-MD5 -->
         <script src="js/plugins/jquery.md5.js"></script>
 
+        <!--Adding in custom Styles -->
+        <link rel="stylesheet" href="style.css">
+
 
 
     </head>
-    <body>
+    <body class="background">
 
         <!--start bootstrap initial containser -->
         <div id="statusContainer" class="container-fluid">
-            <div class="row">
-                <div id="statusbar" class="bg-info col-lg-12" >
+            <div class="row" >
+                <div id="statusbar" class="bg-info col-lg-12 foreground" >
                      <span id="showSettings" class="glyphicon glyphicon-menu-down panel panel-default"></span>
                 </div><!--#statusbar-->
             </div><!--.row-->
         </div><!--#statusContainer-->
-        <div id="mainContainer" class="container-fluid">
+        <div id="mainContainer" class="container-fluid primaryText">
             <div class="row">
-                <div id="sidebar" class="col-md-2 bg-info">
-                    <div id="settings">
-                        <h3>Subsonic Server Credentials</h3>
-                        <div class="form-group">
-                            <label for="subServer">Server Address</label>
-                            <input id="subServer" type="text" value="http://subsonic:4040">
-                        </div>
-                        <div class="form-group">
-                            <label for="subUsername">Username</label>
-                            <input id="subUsername" type="text" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="subPassword">Password</label>
-                            <input id="subPassword"type="password" value="">
-                        </div>
-                        <button id="checkServer" type="submit" value="checkServer" class="btn btn-default">Check Server</button>
-                    </div><!--#settings-->
+                <div class="col-md-4 background"><!--Empty div for centering--></div>
+                <div class="col-lg-4 text-center foregound">
+                <div id="logo" class="foreground">
+                    <h1>SubGnome</h1>
+                </div><!--Logo-->
+                    <div id="settings" class="foreground primaryText">
+                            <h2>Subsonic Server Credentials</h2>
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-2">
+                                    <div class="form-group foreground" >
+                                        <label for="subServer">Server Address</label>
+                                        <input id="subServer" type="text" class="textCenter form-control" value="http://subsonic:4040">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-2">
+                                    <div class="form-group">
+                                        <label for="subUsername">Username</label>
+                                        <input id="subUsername" type="text" class="form-control textCenter" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-2">
+                                    <div class="form-group">
+                                        <label for="subPassword">Password</label>
+                                        <input id="subPassword"type="password" class="form-control textCenter" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="checkServer" type="submit" value="checkServer" class="btn btn-default primaryText secondaryBackground">Check Server</button>
+                            <div class="row loading">
+                                <div id="loginLoading" class="col-md-8 col-md-offset-2" style="display:none;">
+                                
+                                    <img src="images/loading.gif"/>
+                                <br />
+                                </div><!--#loginLoading-->
+                            </div>
+                        </div><!--#settings-->
+                    </div>
+                    <div class="col-md-4 background"><!--Empty div for centering--></div>
+            </div><!-.class-->
+            <div class="hidden row">
+                <div id="sidebar" class="col-md-2 bg-info primaryText">
+                    
 
-                    <div id="artistInfo">
+                    <div id="artistInfo" class="hidden">
                         <p id="artistReplace"><!--placeholder for artist --></p>
                     </div><!--#artistInfo-->
 
                 </div><!--#sidebar-->
-                <div id="mainContent" class="col-md-10 bg-primary">
+                <div id="mainContent" class="hidden col-md-10 bg-primary foreground">
                     <div id="homeContent">
                         Home Content Here.
                     </div><!--#homeContent-->
