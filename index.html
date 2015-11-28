@@ -31,16 +31,17 @@
             <div class="row" >
                 <div id="statusbar" class="bg-info col-lg-12 foreground" >
                      <span id="showSettings" class="glyphicon glyphicon-menu-down panel panel-default"></span>
+                     <span id="showMiniPlayer" class="glyphicon glyphicon-headphones"></span>
+                     <span id="logo" class="foreground primaryText pull-right">SubGnome</span><!--Logo-->
                 </div><!--#statusbar-->
+
             </div><!--.row-->
         </div><!--#statusContainer-->
         <div id="mainContainer" class="container-fluid primaryText">
             <div class="row">
                 <div class="col-md-4 background"><!--Empty div for centering--></div>
                 <div class="col-lg-4 text-center foregound">
-                <div id="logo" class="foreground">
-                    <h1>SubGnome</h1>
-                </div><!--Logo-->
+
                     <div id="settings" class="foreground primaryText">
                             <h2>Subsonic Server Credentials</h2>
                             <div class="row">
@@ -67,28 +68,26 @@
                                     </div>
                                 </div>
                             </div>
-                            <button id="checkServer" type="submit" value="checkServer" class="btn btn-default primaryText secondaryBackground">Check Server</button>
+                            <button id="checkServer" type="submit" value="checkServer" class="btn btn-default primaryText secondaryBackground">Check Server</button><span id="loginStatus"><!--Content for connection status--></span>
                             <div class="row loading">
                                 <div id="loginLoading" class="col-md-8 col-md-offset-2" style="display:none;">
-                                
                                     <img src="images/loading.gif"/>
-                                <br />
                                 </div><!--#loginLoading-->
                             </div>
                         </div><!--#settings-->
                     </div>
                     <div class="col-md-4 background"><!--Empty div for centering--></div>
-            </div><!-.class-->
-            <div class="hidden row">
-                <div id="sidebar" class="col-md-2 bg-info primaryText">
-                    
+            </div><!--.class-->
+            <div id="sidbarRow" class="row contentText" style="display:none;">
+                <div id="sidebar" class="col-md-2 bg-info foreground contentText">
 
-                    <div id="artistInfo" class="hidden">
+
+                    <div id="artistInfo" class="">
                         <p id="artistReplace"><!--placeholder for artist --></p>
                     </div><!--#artistInfo-->
 
                 </div><!--#sidebar-->
-                <div id="mainContent" class="hidden col-md-10 bg-primary foreground">
+                <div id="mainContent" class=" col-md-10 bg-primary foreground">
                     <div id="homeContent">
                         Home Content Here.
                     </div><!--#homeContent-->
@@ -119,7 +118,7 @@
                 </div><!--#mainContent-->
             </div><!--.row-->
         </div><!--#mainContainer-->
-        
+
 
 
 

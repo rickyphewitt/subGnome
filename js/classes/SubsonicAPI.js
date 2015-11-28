@@ -15,7 +15,7 @@ function SubsonicAPI() {
         this.server = $('#subServer').val();
         this.username = $('#subUsername').val();
         this.password = $('#subPassword').val();
-        
+
         //generate rando string for salt and add time in microseconds for noise
         this.salt = Math.random().toString(36).substring(7) + $.now();
         this.token = $.md5(this.password + this.salt);
@@ -27,26 +27,28 @@ function SubsonicAPI() {
         var connectedToServer = false;
         //looking to create something like:
         //http://subsonic:4040/rest/ping.view?u=username&p=pass&c=subGnome&v=1.13.1&f=json
-        var getURL = this.URL(view); 
+        var getURL = this.URL(view);
         //this.server + '/rest/' + view + '?u=' + this.username + '&p=' + this.password + '&c=subGnome' + '&v=1.13.1&f=json';
         console.log('url: ' + getURL);
         $.get(getURL, function(data) {
                 if(data['subsonic-response'].status == 'ok') {
                     //set button to green so we know the status
-                    $("#checkServer").addClass("btn-success").removeClass("btn-default");
-                    $("#statusbar").addClass("bg-success").removeClass("bg-info");
+                    $("#loginStatus").html('Connected!');
                     //set connected to server as true
                     subAPI.connectedToServer = true;
                     //hide the credentials
                     $("#settings").toggle("slow");
+                    $("#sidbarRow").toggle("slow");
                     //get the artist data
                     subAPI.getArtists(subAPI);
 
                 } else {
-                    $("#checkServer").addClass("btn-default").removeClass("btn-success");
-                    $("#statusbar").addClass("bg-info").removeClass("bg-success");
+                    $("#loginStatus").html('Connection Failed. Check Server Creds!');
                     subAPI.connectedToServer = false;
                 }
+
+                //toggle the loader
+                $("#loginLoading").toggle();
 
         });
     }
@@ -60,7 +62,7 @@ function SubsonicAPI() {
         } else {
             //looking to make this url
             //http://subsonic:4040/rest/getIndexes.view?u=username&p=pass&c=subGnome&v=1.13.1&f=json
-             var getURL = this.URL('getArtists.view'); 
+             var getURL = this.URL('getArtists.view');
             //this.server + '/rest/' + view + '?u=' + this.username + '&p=' + this.password + '&c=subGnome' + '&v=1.13.1&f=json';
             console.log('url: ' + getURL);
             $.get(getURL, function(data) {
@@ -90,7 +92,7 @@ function SubsonicAPI() {
             //looking to make this url
             //http://subsonic:4040/rest/getArtist.view?u=username&p=pass&c=subGnome&v=1.13.1&f=json&id=18
             //id is the key here for what artist to retreive the info of
-             var getURL = subAPI.URL('getArtist.view', artistId); 
+             var getURL = subAPI.URL('getArtist.view', artistId);
             console.log('url: ' + getURL);
             $.get(getURL, function(data) {
                     if(data['subsonic-response'].status == 'ok') {
@@ -119,7 +121,7 @@ function SubsonicAPI() {
     //looking to make this url
         //http://subsonic:4040/rest/getalbum.view?u=username&p=pass&c=subGnome&v=1.13.1&f=json&id=18
         //id is the key here for what album to retreive the info of
-         var getURL = subAPI.URL('getAlbum.view', albumId); 
+         var getURL = subAPI.URL('getAlbum.view', albumId);
         console.log('url: ' + getURL);
         $.get(getURL, function(data) {
                 if(data['subsonic-response'].status == 'ok') {
@@ -161,16 +163,16 @@ function SubsonicAPI() {
         //set it to the playlist area
         $("#playlist").html(albumPlayList);
         //set the first one as the source, and add the active class
-        
+
         //gets existing player element
         var player = $("#player");
         //sets sources to new song
 
        setExistingPlayerSource("#nowPlayingSource", $("#playlist li").first().attr("streamURL"), $("#playlist li").first().attr("streamType"));
 
-        //set this as active 
+        //set this as active
         $("#playlist li").first().addClass("text-success");
-        
+
         startNewSong("#player");
     }
 
@@ -184,7 +186,7 @@ function SubsonicAPI() {
             //this html will be visible by the user
             songListHtml += '<li id="' + song.id + '" class="songName" streamURL="' + subAPI.URL('stream.view', song.id) + '" streamType="' + song.contentType + '">' + song.title + '</li>';
             //this html5 audo info will not be visible to the user, but will be used to play
-            //the album 
+            //the album
             albumPlayQueueHtml += '<li id="song' + song.id + '"src="' + subAPI.URL('stream.view', song.id) + '" type="' + song.contentType+ '">';
         });
         songListHtml += '</ul>';
@@ -231,8 +233,8 @@ function SubsonicAPI() {
         var htmlToReturn = '<ul id="albumList" class="list-unstyled">';
         //loop over the albums and order them
         $.each(albumJson, function(index, album) {
-            htmlToReturn += '<span class="link glyphicon glyphicon-play albumPlay pull-left"></span>' + 
-                            '<li id="album' + album.id +'" albumId="' + album.id +'" class="link albumName list-unstyled ">' + album.name + 
+            htmlToReturn += '<span class="link glyphicon glyphicon-play albumPlay pull-left"></span>' +
+                            '<li id="album' + album.id +'" albumId="' + album.id +'" class="link albumName list-unstyled ">' + album.name +
                             '<span id="playAlbum' + album.id + '" class="hidden"><!--albumPlayQueueContentHere--></span>'+
                             '</li>';
             console.log(album.name);
@@ -276,7 +278,7 @@ function SubsonicAPI() {
 $("#checkServer").click(function() {
     //put up loading gif
     $("#loginLoading").toggle();
-    console.log('loadingImage');
+
     var subAPI = new SubsonicAPI();
     subAPI.getCreds();
     //now send a check to the server
@@ -288,11 +290,11 @@ $("#checkServer").click(function() {
 function setArtistNameClickEvent() {
     //click event that is added to each artist to return albums when clicked
     $(".artistName").click(function() {
-        $("#artistList").find(".text-success").removeClass("text-success");
+        $("#artistList").find(".lowlightText").removeClass("lowlightText");
         var subAPI = new SubsonicAPI();
         subAPI.getCreds();
         subAPI.getArtistInfo(subAPI, $(this).attr("id"))
-        $("#" + $(this).attr("id")).addClass("text-success");
+        $("#" + $(this).attr("id")).addClass("lowlightText");
     });
 
 }
@@ -301,14 +303,14 @@ function setArtistNameClickEvent() {
 function setAlbumNameClickEvent() {
     //click event that is added to each album to return songs when clicked
     $(".albumName").click(function() {
-        
+
         //remove existing chosen album css
-        $("#albumList").find(".text-success").removeClass("text-success");
+        $("#albumList").find(".lowlightText").removeClass("lowlightText");
         var subAPI = new SubsonicAPI();
         var albumId = subAPI.getAlbumIdFromId($(this).attr("id"));
         subAPI.getCreds();
         subAPI.getAlbumInfo(subAPI, albumId);
-        $("#" + $(this).attr("id")).addClass("text-success");
+        $("#" + $(this).attr("id")).addClass("lowlightText");
 
     });
 }
@@ -317,7 +319,7 @@ function setAlbumNameClickEvent() {
 function setSongNameClickEvent() {
     //click event that is added to each song to play song when clicked
     $(".songName").click(function() {
-        
+
         var subAPI = new SubsonicAPI();
         subAPI.getCreds();
         subAPI.playSong(subAPI, $(this).attr("id"))
@@ -339,4 +341,3 @@ function setAlbumPlayClickEvent() {
 
     });
 }
-

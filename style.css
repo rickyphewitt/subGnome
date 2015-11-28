@@ -18,9 +18,20 @@
 	color: #9DE0AD;
 }
 
+.contentText {
+	color: white;
+}
 
 .secondaryBackground {
 	background-color: #9DE0AD;
+}
+
+.highlightText {
+	color: #E5FCC2;
+}
+
+.lowlightText {
+	color: #594F4F;
 }
 /*GreenBlue #45ADA8*/
 /*PastelGreen #9DE0AD*/
@@ -35,5 +46,7 @@
 	height: 20px;
 }
 
-
-
+#logo {
+	font-size: xx-large;
+	font-style: bold;
+}
