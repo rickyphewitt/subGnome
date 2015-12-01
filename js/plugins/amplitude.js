@@ -244,10 +244,8 @@ var Amplitude = (function () {
 			isn't bound twice to the same element.
 		*/
 
-		console.log(user_config);
 
 		if( !config.initialized ){
-			console.log('configIsInitalized! SWEET!');
 			/*
 				Initializes debugging right away so we can use it for the rest
 				of the configuration.
@@ -309,7 +307,6 @@ var Amplitude = (function () {
 				This is the ONLY scenario that doesn't require song(s) object.
 			*/
 			if( !user_config.dynamic_mode ){
-				console.log('Not in dynaic mode');
 				/*
 					Checks to see if the user defined any songs.
 					If there are no song definitions, then it's
@@ -320,13 +317,11 @@ var Amplitude = (function () {
 				console.log(user_config.songs);
 
 				if( user_config.songs ){
-					console.log('has songs!');
 					/*
 						Makes sure the songs length is not 0, meaning
 						that there is at least 1 song.
 					*/
 					if( user_config.songs.length != 0 ){
-						console.log('has more than 0 songs');
 
 						/*
 							Copies over the user defined songs. and prepares

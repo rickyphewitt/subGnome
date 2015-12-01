@@ -7,5 +7,5 @@ $("#showSettings").click(function() {
 
 //adds the click event for showing the mini player
 $("#showMiniPlayer").click(function(){
-	window.open("miniPlayer/index.html");
+	window.open("miniPlayer/index.html","mywindow", "location=no, menubar=no, status=no, titlebar=no, width=400,height=55,left=0,top=100,screenX=0,screenY=100");
 });
