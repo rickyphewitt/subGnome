@@ -125,8 +125,15 @@ function SubsonicAPI() {
         console.log('url: ' + getURL);
         $.get(getURL, function(data) {
                 if(data['subsonic-response'].status == 'ok') {
-                    console.log(data['subsonic-response']);
+                    //console.log('AlbumInfo'+data['subsonic-response']);
                     var songHtml = subAPI.buildSongView(subAPI, data['subsonic-response'].album.song);
+                    var amplitudeSongContentsArray = subAPI.buildAmplitudeSongView(subAPI, data['subsonic-response'].album.song);
+
+                    console.log('AmplitudeInfo: ' + amplitudeSongContentsArray);
+                    //set amp json and html
+                    $("#ampPlaylistInfo").attr("ampJSON", amplitudeSongContentsArray[0]);
+                    $("#ampPlaylistInfo").attr("ampHTML", amplitudeSongContentsArray[1]);
+
                     //var artistHtml = subAPI.buildArtistView(data['subsonic-response'].indexes.index);
                     $("#albumSongList").replaceWith(songHtml[0]);
                     setSongNameClickEvent();
@@ -143,6 +150,124 @@ function SubsonicAPI() {
 
         });
     }
+
+
+
+    //creates the json for the amplitude song object
+    this.buildAmplitudeSongView = function(subAPI, songJson) {
+        /*JSON we are looking to create
+        {
+			"songs": [
+				{
+					"name": "Living Proof",
+					"artist": "Gregory Alan Isakov",
+					"album": "The Weatherman",
+					"url": "http://a1537.phobos.apple.com/us/r30/Music4/v4/60/af/eb/60afeba7-f8d9-a920-ff5b-b8666fdc2de4/mzaf_3379426683594665460.plus.aac.p.m4a",
+					"live": false,
+					"cover_art_url": "images/theweatherman.jpg"
+				},
+				{
+					"name": "Rooms",
+					"artist": "Mia and Jonah",
+					"album": "Rooms For Adelaide",
+					"url": "http://a656.phobos.apple.com/us/r30/Music/2d/d1/52/mzm.oymgnziu.aac.p.m4a",
+					"live": false,
+					"cover_art_url": "images/roomsforadelaide.jpg"
+				},
+				{
+					"name": "Suburban War",
+					"artist": "The Arcade Fire",
+					"album": "The Suburbs",
+					"url": "https://p.scdn.co/mp3-preview/f5b1bef707e8be7052a1efa5a39555c48e913d36",
+					"live": false,
+					"cover_art_url": "images/thesuburbs.jpeg"
+				}
+			],
+			"default_album_art": "images/no-cover-large.png"
+		}
+        With matching HTML at correct indexes
+
+        <div class="amplitude-song-container amplitude-play-pause playlist-item" amplitude-song-index="0">
+				<img src="images/theweatherman.jpg" class="album-art"/>
+				<div class="playlist-meta">
+					<div class="now-playing-title">Living Proof</div>
+					<div class="album-information">Gregory Alan Isakov - The Weatherman</span></div>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+			<div class="amplitude-song-container amplitude-play-pause playlist-item" amplitude-song-index="1">
+				<img src="images/roomsforadelaide.jpg" class="album-art"/>
+				<div class="playlist-meta">
+					<div class="now-playing-title">Rooms</div>
+					<div class="album-information">Mia and Jonah - Rooms For Adelaide</span></div>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+			<div class="amplitude-song-container amplitude-play-pause playlist-item" amplitude-song-index="2">
+				<img src="images/thesuburbs.jpeg" class="album-art"/>
+				<div class="playlist-meta">
+					<div class="now-playing-title">Suburban War</div>
+					<div class="album-information">The Arcade Fire - The Suburbs</span></div>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+
+        */
+
+
+        var amplitudeInfo = [];
+        var playQueueHTML = '';
+        var playQueueJSON = '';
+        var currentIndex = 0;
+        var defaultAlbumArt = 'images/no-cover-large.png';
+        var songListHtml = '<ul id="albumSongList">';
+        $.each(songJson, function(index, song) {
+
+            console.log('SongInfo' + song);
+
+
+            //Ceate the JSON for amplitude
+            var singleSongJSON = '{';
+            singleSongJSON += '"name" : "' + song.title + '",';
+            singleSongJSON += '"artist" : "' + song.artist + '",';
+            singleSongJSON += '"album" : "' + song.album + '" ,';
+            singleSongJSON += '"url" : "' + subAPI.URL('stream.view', song.id) + '",';
+            singleSongJSON += '"live" : "false",';
+            singleSongJSON += '"cover_art_url" : "'+defaultAlbumArt+'"';
+            singleSongJSON += '},';
+
+            console.log('SingleSongJSON: ' + singleSongJSON);
+
+            playQueueJSON = playQueueJSON + singleSongJSON;
+
+            //Create the HTML for apmplitude
+            singleSongHTML = '<div class="amplitude-song-container amplitude-play-pause playlist-item" amplitude-song-index="'+ currentIndex +'"> \n';
+            singleSongHTML += '<img src="' + defaultAlbumArt + '" class="album-art"/>';
+            singleSongHTML += '<div class="playlist-meta"> \n';
+            singleSongHTML += '<div class="now-playing-title">' + song.title + '</div>\n';
+            singleSongHTML += '<div class="album-information">' + song.artist + ' - ' + song.album + '</span></div>\n';
+            singleSongHTML += '</div> \n <div style="clear: both;"></div> \n </div>';
+            //playQueueHTML
+
+            playQueueHTML += singleSongHTML;
+
+            //imcrement index
+            currentIndex++;
+        });
+
+        //remove last character (,) before wrapping json
+        playQueueJSON = playQueueJSON.substring(0, playQueueJSON.length - 1);
+        //wrap in song JSON
+        playQueueJSON = '{"debug": true, "songs": ['+ playQueueJSON +']}';
+        console.log('NewplayQueueJSON' + playQueueJSON);
+        amplitudeInfo[0] = playQueueJSON;
+
+
+        amplitudeInfo[1] = playQueueHTML;
+
+        return amplitudeInfo
+    }
+
 
 
     //plays a single song
