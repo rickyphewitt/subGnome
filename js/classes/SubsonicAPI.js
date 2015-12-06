@@ -101,6 +101,7 @@ function SubsonicAPI() {
                         //var artistHtml = subAPI.buildArtistView(data['subsonic-response'].indexes.index);
                         $("#albumList").replaceWith(albumHtml);
                         setAlbumNameClickEvent();
+                        setAlbumLoadAndPlayClickEvent();
                         //set button to green so we know the status
                         //$("#checkServer").addClass("btn-success").removeClass("btn-default");
                         //$("#statusbar").addClass("bg-success").removeClass("bg-info");
@@ -117,7 +118,7 @@ function SubsonicAPI() {
 
 
     //gets an albums songs list, and adds an album play queue span next to each album
-    this.getAlbumInfo = function(subAPI, albumId) {
+    this.getAlbumInfo = function(subAPI, albumId, play) {
     //looking to make this url
         //http://subsonic:4040/rest/getalbum.view?u=username&p=pass&c=subGnome&v=1.13.1&f=json&id=18
         //id is the key here for what album to retreive the info of
@@ -143,6 +144,10 @@ function SubsonicAPI() {
                     setAlbumPlayClickEvent();
                     //mark currently selected album
                     $("#" + albumId).addClass("text-success");
+                    //check if we should play the album
+                    if(play == true) {
+                        subAPI.playAlbum(subAPI, 'playAlbum' + albumId)
+                    }
 
                 } else {
                    console.log('Failed to get Artist in function: getArtistInfo');
@@ -447,8 +452,9 @@ function setAlbumNameClickEvent() {
         var subAPI = new SubsonicAPI();
         var albumId = subAPI.getAlbumIdFromId($(this).attr("id"));
         subAPI.getCreds();
-        subAPI.getAlbumInfo(subAPI, albumId);
+        subAPI.getAlbumInfo(subAPI, albumId, false);
         $("#" + $(this).attr("id")).addClass("lowlightText");
+
 
     });
 }
@@ -464,6 +470,24 @@ function setSongNameClickEvent() {
 
     });
 }
+
+//wrapper function to load and play album info via the play button next to album
+function setAlbumLoadAndPlayClickEvent() {
+    //click event that is added to each album to return songs when clicked
+    $(".albumPlay").click(function() {
+
+        //remove existing chosen album css
+        $("#albumList").find(".lowlightText").removeClass("lowlightText");
+        var subAPI = new SubsonicAPI();
+        var albumId = subAPI.getAlbumIdFromId($(this).next().attr("id"));
+        subAPI.getCreds();
+        subAPI.getAlbumInfo(subAPI, albumId, true);
+        $("#" + $(this).next().attr("id")).addClass("lowlightText");
+
+    });
+}
+
+
 
 //wrapper function so click events to the album play button can be added when loaded from server
 function setAlbumPlayClickEvent() {
