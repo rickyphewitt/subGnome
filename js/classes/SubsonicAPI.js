@@ -148,6 +148,7 @@ function SubsonicAPI() {
                    console.log('Failed to get Artist in function: getArtistInfo');
                 }
 
+
         });
     }
 
@@ -233,7 +234,7 @@ function SubsonicAPI() {
             singleSongJSON += '"album" : "' + song.album + '" ,';
             singleSongJSON += '"url" : "' + subAPI.URL('stream.view', song.id) + '",';
             singleSongJSON += '"live" : "false",';
-            singleSongJSON += '"cover_art_url" : "'+defaultAlbumArt+'"';
+            singleSongJSON += '"cover_art_url" : "'+subAPI.URL('getCoverArt.view', song.coverArt)+'"';
             singleSongJSON += '},';
 
             console.log('SingleSongJSON: ' + singleSongJSON);
@@ -242,7 +243,7 @@ function SubsonicAPI() {
 
             //Create the HTML for apmplitude
             singleSongHTML = '<div class="amplitude-song-container amplitude-play-pause playlist-item" amplitude-song-index="'+ currentIndex +'"> \n';
-            singleSongHTML += '<img src="' + defaultAlbumArt + '" class="album-art"/>';
+            singleSongHTML += '<img src="' + subAPI.URL('getCoverArt.view', song.coverArt) + '" class="album-art"/>';
             singleSongHTML += '<div class="playlist-meta"> \n';
             singleSongHTML += '<div class="now-playing-title">' + song.title + '</div>\n';
             singleSongHTML += '<div class="album-information">' + song.artist + ' - ' + song.album + '</span></div>\n';
@@ -258,7 +259,7 @@ function SubsonicAPI() {
         //remove last character (,) before wrapping json
         playQueueJSON = playQueueJSON.substring(0, playQueueJSON.length - 1);
         //wrap in song JSON
-        playQueueJSON = '{"debug": true, "songs": ['+ playQueueJSON +']}';
+        playQueueJSON = '{"debug": true, "songs": ['+ playQueueJSON +'],'+this.registerCallbacks(subAPI)+'}';
         console.log('NewplayQueueJSON' + playQueueJSON);
         amplitudeInfo[0] = playQueueJSON;
 
@@ -266,6 +267,14 @@ function SubsonicAPI() {
         amplitudeInfo[1] = playQueueHTML;
 
         return amplitudeInfo
+    }
+
+
+    //registers callbacksfor amplitude.js
+    this.registerCallbacks = function(subAPI) {
+        return ' "callbacks": { '+
+        ' "after_album_change": "setDurationOfActiveSong" '+
+        '}';
     }
 
 
@@ -309,7 +318,11 @@ function SubsonicAPI() {
         var songListHtml = '<ul id="albumSongList">';
         $.each(songJson, function(index, song) {
             //this html will be visible by the user
-            songListHtml += '<li id="' + song.id + '" class="songName" streamURL="' + subAPI.URL('stream.view', song.id) + '" streamType="' + song.contentType + '">' + song.title + '</li>';
+            songListHtml += '<li id="' + song.id + '" class="songName" streamURL="' +
+                            subAPI.URL('stream.view', song.id) + '" streamType="' +
+                            song.contentType + '" coverArt="'+
+                            subAPI.URL('getCoverArt.view', song.coverArt)+'">' +
+                            song.title + '</li>';
             //this html5 audo info will not be visible to the user, but will be used to play
             //the album
             albumPlayQueueHtml += '<li id="song' + song.id + '"src="' + subAPI.URL('stream.view', song.id) + '" type="' + song.contentType+ '">';
