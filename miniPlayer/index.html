@@ -210,6 +210,7 @@
 				Is expanded
 			*/
 			expanded = true;
+			window.resizeTo(400, $( document ).height() + 50);
 
 			$('#small-player').css('border-top-left-radius', '0px');
 			$('#small-player').css('border-top-right-radius', '0px');
@@ -222,7 +223,7 @@
 				Is collapsed
 			*/
 			expanded = false;
-
+			window.resizeTo(400, $( document ).height() - 350);
 			$('#small-player').css('border-top-left-radius', '5px');
 			$('#small-player').css('border-top-right-radius', '5px');
 		});
@@ -238,6 +239,7 @@
 				$('#large-album-art').css('border-bottom-right-radius', '5px');
 
 				playlistEpxanded = false;
+				window.resizeTo(400, $( document ).height() - 190);
 			}else{
 				$('#small-player-playlist').show();
 
@@ -248,7 +250,9 @@
 				$('#large-album-art').css('border-bottom-right-radius', '0px');
 
 				playlistEpxanded = true;
+				window.resizeTo(400, $( document ).height() + 50);
 			}
 		})
+}
 	</script>
 </html>
