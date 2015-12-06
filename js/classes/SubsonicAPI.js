@@ -230,8 +230,8 @@ function SubsonicAPI() {
         $.each(songJson, function(index, song) {
 
             console.log('SongInfo' + song);
-
-
+            //convert seconds to minutes & seconds
+            var durrationOfSong = subAPI.convertSeconds(song);
             //Ceate the JSON for amplitude
             var singleSongJSON = '{';
             singleSongJSON += '"name" : "' + song.title + '",';
@@ -239,12 +239,18 @@ function SubsonicAPI() {
             singleSongJSON += '"album" : "' + song.album + '" ,';
             singleSongJSON += '"url" : "' + subAPI.URL('stream.view', song.id) + '",';
             singleSongJSON += '"live" : "false",';
-            singleSongJSON += '"cover_art_url" : "'+subAPI.URL('getCoverArt.view', song.coverArt)+'"';
+            singleSongJSON += '"cover_art_url" : "'+subAPI.URL('getCoverArt.view', song.coverArt)+'",';
+            singleSongJSON += '"duration_minutes" : "'+durrationOfSong[0]+'",';
+            singleSongJSON += '"duration_seconds" : "'+durrationOfSong[1]+'"';
+
             singleSongJSON += '},';
 
             console.log('SingleSongJSON: ' + singleSongJSON);
 
             playQueueJSON = playQueueJSON + singleSongJSON;
+
+
+
 
             //Create the HTML for apmplitude
             singleSongHTML = '<div class="amplitude-song-container amplitude-play-pause playlist-item" amplitude-song-index="'+ currentIndex +'"> \n';
@@ -252,6 +258,8 @@ function SubsonicAPI() {
             singleSongHTML += '<div class="playlist-meta"> \n';
             singleSongHTML += '<div class="now-playing-title">' + song.title + '</div>\n';
             singleSongHTML += '<div class="album-information">' + song.artist + ' - ' + song.album + '</span></div>\n';
+            //singleSongHTML += '<span id="' + song.artist + song.title +'minutes" class="duration-minutes" style="display:none;">' + minutes + '</span>\n';
+            //singleSongHTML += '<span id="'+ song.artist + song.title +'seconds" class="duration-seconds" style="display:none;">' + seconds + '</span>\n';
             singleSongHTML += '</div> \n <div style="clear: both;"></div> \n </div>';
             //playQueueHTML
 
@@ -264,7 +272,7 @@ function SubsonicAPI() {
         //remove last character (,) before wrapping json
         playQueueJSON = playQueueJSON.substring(0, playQueueJSON.length - 1);
         //wrap in song JSON
-        playQueueJSON = '{"debug": true, "songs": ['+ playQueueJSON +'],'+this.registerCallbacks(subAPI)+'}';
+        playQueueJSON = '{"debug": true, "songs": ['+ playQueueJSON +'],'+subAPI.registerCallbacks(subAPI)+'}';
         console.log('NewplayQueueJSON' + playQueueJSON);
         amplitudeInfo[0] = playQueueJSON;
 
@@ -278,7 +286,9 @@ function SubsonicAPI() {
     //registers callbacksfor amplitude.js
     this.registerCallbacks = function(subAPI) {
         return ' "callbacks": { '+
-        ' "after_album_change": "setDurationOfActiveSong" '+
+        '"after_init":"after_init_callback",'+
+        '"after_next":"after_next_callback",'+
+        '"after_prev":"after_prev_callback"'+
         '}';
     }
 
@@ -408,6 +418,36 @@ function SubsonicAPI() {
     this.getAlbumIdFromId = function(id) {
         return $("#" + id).closest("li").attr("albumId");
     }
+
+
+    //takes in seconds and converts it to minutes and seconds
+    //returning an array
+    //[0] = minutes
+    //[1] = seconds
+    this.convertSeconds = function(song) {
+        //convert seconds to minutes and seconds
+        var songDuration = [];
+        //defaults
+        songDuration[0] = 0;
+        songDuration[1] = 00;
+
+        //check if duration is available for this song
+        if(song.hasOwnProperty('duration')) {
+            //minutes
+            songDuration[0] = Math.floor(song.duration / 60);
+            //seconds
+            songDuration[1] = song.duration - songDuration[0] * 60;
+
+            //check if we need to pad the seconds to display properly
+            if(songDuration[1] < 10 ) {
+                songDuration[1] = '0' + seconds;
+            }
+
+
+        }
+    return songDuration;
+    }
+
 
 }
 

@@ -253,6 +253,36 @@
 				window.resizeTo(400, $( document ).height() + 50);
 			}
 		});
-		
+
+
+		//callbacks
+
+		function after_init_callback() {
+			setDurationOfActiveSong();
+		}
+
+		function after_next_callback() {
+			setDurationOfActiveSong();
+		}
+
+		function after_prev_callback() {
+			setDurationOfActiveSong();
+		}
+
+		//callbacks
+		function setDurationOfActiveSong() {
+			//get song and album name to use as id for min/sec duration
+			var currentSongMetadata = Amplitude.getActiveSongMetadata();
+
+			//set the current playing seconds/minutes
+			//it seems amplitude does this for some songs, automatically
+			//but does not seem to be the case for subsonic streams
+			$(".amplitude-duration-minutes").first().text(currentSongMetadata.duration_minutes);
+			$(".amplitude-duration-seconds").first().text(currentSongMetadata.duration_seconds);
+
+
+		}
+
+
 	</script>
 </html>
