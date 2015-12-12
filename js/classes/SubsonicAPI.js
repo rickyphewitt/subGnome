@@ -241,7 +241,8 @@ function SubsonicAPI() {
             singleSongJSON += '"live" : "false",';
             singleSongJSON += '"cover_art_url" : "'+subAPI.URL('getCoverArt.view', song.coverArt)+'",';
             singleSongJSON += '"duration_minutes" : "'+durrationOfSong[0]+'",';
-            singleSongJSON += '"duration_seconds" : "'+durrationOfSong[1]+'"';
+            singleSongJSON += '"duration_seconds" : "'+durrationOfSong[1]+'",';
+            singleSongJSON += '"duration_total" : "'+durrationOfSong[2]+'"';
 
             singleSongJSON += '},';
 
@@ -430,6 +431,7 @@ function SubsonicAPI() {
         //defaults
         songDuration[0] = 0;
         songDuration[1] = 00;
+        songDuration[2] = 0;
 
         //check if duration is available for this song
         if(song.hasOwnProperty('duration')) {
@@ -437,10 +439,11 @@ function SubsonicAPI() {
             songDuration[0] = Math.floor(song.duration / 60);
             //seconds
             songDuration[1] = song.duration - songDuration[0] * 60;
-
+            //set total seconds to use later
+            songDuration[2] = song.duration;
             //check if we need to pad the seconds to display properly
             if(songDuration[1] < 10 ) {
-                songDuration[1] = '0' + seconds;
+                songDuration[1] = '0' + songDuration;
             }
 
 
