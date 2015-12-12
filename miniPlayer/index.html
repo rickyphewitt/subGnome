@@ -283,67 +283,56 @@
 			$(".amplitude-song-time-visualization-status").first().width("0");
 
   			var timer = setTimeout(updateSongTimeVisualizationStatus, 1000);
-			//clearTimeout(timer);
-
-			//var timer = setTimeout(func, 2000)
-
-
-
-
-//middle-top-play-pause
-//song-time-visualization-large
-//song-time-visualization
 
 		}
 
+		//looks at the current play time in seconds, then updates the
+		//visualizer width to show for both middle and large bars
 		function updateSongTimeVisualizationStatus() {
 			var currentSongMetadata = Amplitude.getActiveSongMetadata();
 			//also set the slider
 			console.log("total:" +currentSongMetadata.duration_total);
+			var currentPlayTimeInSeconds = getCurrentTotalPlayTimeInSeconds();
+			//
 			//Small player
 			var incrementSliderMiddle = 260 / currentSongMetadata.duration_total;
 			//large player
-			var incrementSliderSmall = 304 / currentSongMetadata.duration_total;
+			var incrementSliderLarge = 304 / currentSongMetadata.duration_total;
 
-			console.log("incSliderMiddle: " + incrementSliderMiddle);
-			//check if the small player is playing or paused
-			if($("#middle-top-play-pause").hasClass("amplitude-paused")) {
+			//next update
+			var visualMiddleUpdate = Number((currentPlayTimeInSeconds * incrementSliderMiddle));
+			var visualLargeUpdate = Number((currentPlayTimeInSeconds * incrementSliderLarge));
+
+			//check if the both play classes are playing or paused
+			if($("#middle-top-play-pause").hasClass("amplitude-paused") && $("#song-time-visualization-large").hasClass("amplitude-paused")) {
 				//do not update as music is paused
 			} else {
-				//upadte
-				//get previous value
-				//using getBoudningClientRect and plain js .style.width method as jquery .width() rounds
-				//see: http://stackoverflow.com/questions/3603065/how-to-make-jquery-to-not-round-value-returned-by-width
-				var currentWidth = $(".amplitude-song-time-visualization-status")[0].getBoundingClientRect().width;
-				var nextWidth = incrementSliderMiddle + currentWidth;
-				console.log('CurrentWidth: ' + currentWidth);
-				console.log("NextWidthUpdate" + nextWidth);
-				$(".amplitude-song-time-visualization-status")[0].style.width = nextWidth + "px";
-				console.log('UpdatedWidth: ' + nextWidth);
+				//update both the middle and large visualizers
+				$(".amplitude-song-time-visualization-status")[0].style.width = visualMiddleUpdate + "px";
+				$(".amplitude-song-time-visualization-status")[1].style.width = visualLargeUpdate + "px";
 
 			}
+
+			function getCurrentTotalPlayTimeInSeconds() {
+				return Number((parseInt(getCurrentPlayTimeMinutesInSeconds()) + parseInt(getCurrentPlayTimeInSeconds())));
+			}
+
+			function getCurrentPlayTimeMinutesInSeconds() {
+				var currentMinutes = $(".amplitude-current-minutes").first().text();
+				//change to seeconds
+				return currentMinutes * 60;
+			}
+
+			function getCurrentPlayTimeInSeconds() {
+				return $(".amplitude-current-seconds").first().text();
+			}
+
 			timer = setTimeout(updateSongTimeVisualizationStatus, 960);
 			//clear previous timer
 			clearTimeout(timer-1);
 			//should implement a more elegant solution:
 			//http://stackoverflow.com/questions/2814919/does-the-browser-keep-track-of-active-timer-ids
-			console.log('timer: id' + timer);
 		}
-		// //adding functionality to update the now playing visualizer as its not working with subsonic music
-		// window.setInterval(function(){
-		//   //currently using harcoded width of mini players status bar as 304, will make this more dyanimic in future
-		//   //as needed to implement the full amplitude.js player
-		//   var nowPlayingMinutes = $(".amplitude-current-minutes").first().val() * 60;
-		//   var nowPlayingSeconds = $(".amplitude-current-seconds").first().val();
-		//   var totalSeconds = currentSongMetadata.total_seconds;
-		//   //set the width of the playing element to seconds / total width
-		//   var increment =
-		//
-		//
-		//
-		//
-		//
-		//  	}, 1000);
 
 
 	</script>
