@@ -1,4 +1,4 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
+/* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -12,8 +12,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
     margin: 0;
@@ -24,7 +24,7 @@ time, mark, audio, video {
     vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
     display: block;
 }
@@ -206,7 +206,7 @@ div.current-time{
     font-size: 10px;
     bottom: 7px;
     left: 3px;
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: 300;
 }
 div.time-duration{
@@ -214,7 +214,7 @@ div.time-duration{
     font-size: 10px;
     bottom: 7px;
     right: 3px;
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: 300;
 }
 /*
@@ -253,11 +253,49 @@ div#left-content{
     width: 299px;
     overflow-y: scroll;
 }
+
+
+/*
+    Artist Container
+*/
+div.artist-container{
+    padding: 4px 0px 4px 15px;
+    height: 10px;
+    cursor: pointer;
+    clear: both;
+}
+
+div.artist-container div.artist{
+    color: #606060;
+    font-size: 14px;
+    font-family: "Helvetica", sans-serif;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+/*
+    Breadcrumb Container
+*/
+div.breadcrumbContainer{
+    font-family: "Helvetica", sans-serif;
+    padding: 4px 4px 10px 10px;
+    height: 10px;
+    cursor: pointer;
+    clear: both;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+div.breadcrumbContainer span.crumbs{
+    font-family: "Helvetica", sans-serif;
+    color: #9e9e9e;
+    font-size: 12px;
+}
+
 /*
     Album container
 */
 div.album-container{
-   padding: 4px 0px 4px 15px; 
+   padding: 4px 0px 4px 15px;
    height: 50px;
    cursor: pointer;
    clear: both;
@@ -274,14 +312,14 @@ div.album-meta{
     float: left;
     padding: 5px;
 }
-div.album-meta  div.artist{
+div.album-meta  div.album-info{
     color: #606060;
     font-size: 14px;
     font-family: "Helvetica", sans-serif;
     font-weight: 400;
     line-height: 20px;
 }
-div.album-meta div.album-info{
+div.album-meta div.artist{
     color: #d6d6d6;
     font-size: 14px;
     font-family: "Helvetica", sans-serif;

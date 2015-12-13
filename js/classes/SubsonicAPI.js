@@ -140,6 +140,10 @@ function SubsonicAPI() {
                     $("#ampPlaylistInfo").attr("ampJSON", amplitudeSongContentsArray[0]);
                     $("#ampPlaylistInfo").attr("ampHTML", amplitudeSongContentsArray[1]);
 
+                    $("#albumHeaderPlaceholder").replaceWith(amplitudeSongContentsArray[2]);
+                    $("#albumDetailsPlaceholder").replaceWith(amplitudeSongContentsArray[3]);
+
+
                     //var artistHtml = subAPI.buildArtistView(data['subsonic-response'].indexes.index);
                     $("#albumSongList").replaceWith(songHtml[0]);
                     setSongNameClickEvent();
@@ -229,9 +233,18 @@ function SubsonicAPI() {
         var amplitudeInfo = [];
         var playQueueHTML = '';
         var playQueueJSON = '';
+
+        var fullPlayerSingleAlbumHeader = '<img src="'+subAPI.URL('getCoverArt.view', songJson[0].coverArt)+'" />\n';
+        fullPlayerSingleAlbumHeader += '<div class="album-artist">' + songJson[0].artist + '</div>\n';
+
+        var fullPlayerSingleAlbumDetails = '<img class="album-art" src="'+subAPI.URL('getCoverArt.view', songJson[0].coverArt)+'" />\n';
+        fullPlayerSingleAlbumDetails += '<div class="album-contents">\n';
+        fullPlayerSingleAlbumDetails += '<div class="title">' + songJson[0].album + '</div>\n';
+
         var currentIndex = 0;
         var defaultAlbumArt = 'images/no-cover-large.png';
         var songListHtml = '<ul id="albumSongList">';
+
         $.each(songJson, function(index, song) {
 
             console.log('SongInfo' + song);
@@ -271,6 +284,14 @@ function SubsonicAPI() {
 
             playQueueHTML += singleSongHTML;
 
+
+
+            //full player
+            fullPlayerSingleAlbumDetails += '<div class="song-title amplitude-song-container amplitude-play-pause playlist-item" amplitude-song-index="'+ currentIndex +'"> \n';
+            fullPlayerSingleAlbumDetails += '<img src="images/now-playing.png"/>' + song.title + '</div>';
+            fullPlayerSingleAlbumDetails + '</div><!--.album-contents--></div><!--.album-details-->';
+
+
             //imcrement index
             currentIndex++;
         });
@@ -285,7 +306,12 @@ function SubsonicAPI() {
 
         amplitudeInfo[1] = playQueueHTML;
 
-        return amplitudeInfo
+
+        //fullPlayerAlbumHTML
+        amplitudeInfo[2] = fullPlayerSingleAlbumHeader;
+        amplitudeInfo[3] = fullPlayerSingleAlbumDetails;
+
+        return amplitudeInfo;
     }
 
 
@@ -358,11 +384,10 @@ function SubsonicAPI() {
     //builds a list of id to artists from json
     this.buildArtistView = function(artistJson) {
         var htmlToReturn = [];
+        var artistSlideHtml = '';
         var artistStartViewOpen = '<div class="artist-container">' +
                                 '<div class="artist">';
         var artistStartViewClose = '</div> </div>';
-
-        var artistSlideHtml;
 
         htmlToReturn[0] = '<ul id="artistList" class="list-unstyled">';
         //loop over the first list, A, B, C, ect
@@ -413,8 +438,8 @@ function SubsonicAPI() {
         //loop over the albums and order them
         $.each(albumJson, function(index, album) {
             albumSlideHtml += albumSlideOpen + albumSlideImage + albumSlideMeta;
+            albumSlideHtml += '<div id="album' + album.id + '"  albumId="' + album.id +'" class="album-info albumName">' + album.name + '</div>';
             albumSlideHtml += '<div class="artist">' + album.artist + '</div>';
-            albumSlideHtml += '<div id="album' + album.id + '"  albumId="' + album.id +' class="album-info albumName">' + album.name + '</div>';
             albumSlideHtml += albumSlideClose;
             htmlToReturn[0] += '<span class="link glyphicon glyphicon-play albumPlay pull-left"></span>' +
                             '<li id="album' + album.id +'" albumId="' + album.id +'" class="link albumName list-unstyled ">' + album.name +
@@ -498,25 +523,51 @@ $("#checkServer").click(function() {
     var subAPI = new SubsonicAPI();
     subAPI.getCreds();
     //now send a check to the server
-    subAPI.checkStatus(subAPI, 'ping.view')
+    subAPI.checkStatus(subAPI, 'ping.view');
     //now get artists
 });
+
+setBreadcrumbLibraryClickEvent();
+
+//wrapper function to set library breadcrumbs
+function setBreadcrumbLibraryClickEvent() {
+    $("#breadcrumLibrary").click(function(){
+        $("#albumPane").hide();
+        $("#artistPane").show();
+        //prep album pane for next artist click
+        $("#albumPane").html('<span id="albumSlidePlaceholder"></span><!--Dynamic Artist Content Loaded Here-->');
+        $("#breadcrumbs").html('<span id="breadcrumLibrary" class="crumbs">Library</span>');
+        setBreadcrumbLibraryClickEvent();
+    });
+}
 
 //wrapper function so click events to the artist name can be added when loaded from server
 function setArtistNameClickEvent() {
     //click event that is added to each artist to return albums when clicked
     $(".artistName").click(function() {
-        $("#artistList").find(".lowlightText").removeClass("lowlightText");
+        //get the albums from the server
         var subAPI = new SubsonicAPI();
         subAPI.getCreds();
         subAPI.getArtistInfo(subAPI, $(this).attr("id"))
-        $("#" + $(this).attr("id")).addClass("lowlightText");
         //hide the artist pane and show the album pane
         $("#artistPane").hide();
         $("#albumPane").show();
+        //set the breadcrumbs to show artist clicked
+        $("#breadcrumbs").html(getCurrentBreadcrumbs() + getArtistBreadcrumb($(this).text()));
+        //after replacing the html, reset the click event
+        setBreadcrumbLibraryClickEvent();
 
     });
 
+}
+
+
+function getCurrentBreadcrumbs(){
+    return $("#breadcrumbs").html();
+}
+
+function getArtistBreadcrumb(artistName) {
+    return '<span id="breadcrumArtist" class="crumbs"> > ' + artistName + '</span>';
 }
 
 //wrapper function so click events to the album name can be added when loaded from server
@@ -527,7 +578,9 @@ function setAlbumNameClickEvent() {
         //remove existing chosen album css
         $("#albumList").find(".lowlightText").removeClass("lowlightText");
         var subAPI = new SubsonicAPI();
-        var albumId = subAPI.getAlbumIdFromId($(this).attr("id"));
+        //var albumId = subAPI.getAlbumIdFromId($(this).attr("Id"));
+        var albumId = $(this).attr("albumId");
+        console.log("albumID: " + albumId);
         subAPI.getCreds();
         subAPI.getAlbumInfo(subAPI, albumId, false);
         $("#" + $(this).attr("id")).addClass("lowlightText");

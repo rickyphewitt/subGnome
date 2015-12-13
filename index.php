@@ -62,8 +62,8 @@
 
 			<!-- Begin Left Content -->
 			<div id="left-content">
-				<div id="breadCrumbs" class="title">
-					Artists
+				<div id="breadcrumbs" class="breadcrumbContainer">
+					<span id="breadcrumLibrary" class="crumbs">Library</span>
 				</div>
 				<div id="artistPane">
 					<span id="artistSlidePlaceholder"></span><!--Dynamic Artist Content Loaded Here-->
@@ -98,7 +98,26 @@
 
 			<!-- Begin Right Content -->
 			<div id="right-content">
-				<div class="album-display the-weatherman-display">
+				<div class="album-display">
+					<div class="album-header">
+						<span id="albumHeaderPlaceholder"></span><!--Dynamic Album Header Here-->
+						<!-- <img src="images/theweatherman.jpg"/>
+						<div class="album-artist">Gregory Alan Isakov</div> -->
+					</div>
+					<div class="album-details">
+						<span id="albumDetailsPlaceholder"></span><!--Dynamic Album Details Here-->
+						<!-- <img class="album-art" src="images/theweatherman.jpg"/>
+						<div class="album-contents">
+							<div class="title">The Weatherman</div>
+							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="0"><img src="images/now-playing.png"/>Living Proof</div>
+							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="3"><img src="images/now-playing.png"/>Amsterdam</div>
+							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="4"><img src="images/now-playing.png"/>Saint Valentine</div>
+							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="5"><img src="images/now-playing.png"/>Second Chances</div>
+						</div> -->
+					</div>
+				</div>
+
+				<!--<div class="album-display the-weatherman-display">
 					<div class="album-header" id="the-weatherman-header">
 						<img src="images/theweatherman.jpg"/>
 						<div class="album-artist">Gregory Alan Isakov</div>
@@ -113,8 +132,8 @@
 							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="5"><img src="images/now-playing.png"/>Second Chances</div>
 						</div>
 					</div>
-				</div>
-				<div class="album-display rooms-for-adelaide-display">
+				</div>-->
+				<!-- <div class="album-display rooms-for-adelaide-display">
 					<div class="album-header" id="rooms-for-adelaide-header">
 						<img src="images/roomsforadelaide.jpg"/>
 						<div class="album-artist">Mia and Jonah</div>
@@ -140,7 +159,7 @@
 							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="6"><img src="images/now-playing.png"/>City With No Children</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 			</div>
 			<!-- End Right Content -->
 
@@ -222,7 +241,7 @@
 		function album_change(){
 			var activeSong = Amplitude.getActiveSongMetadata();
 
-			$('.album-display').hide();
+			$('.album-display').show();
 			$('.album-container').removeClass('active-album-container');
 
 			switch( activeSong.album ){
@@ -241,7 +260,7 @@
 			}
 		}
 		$('.album-container').click(function(){
-			$('.album-display').hide();
+			$('.album-display').show();
 			$('.album-container').removeClass('active-album-container');
 
 			if( $(this).hasClass('the-weatherman') ){
