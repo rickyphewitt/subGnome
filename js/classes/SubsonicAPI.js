@@ -69,7 +69,9 @@ function SubsonicAPI() {
                     if(data['subsonic-response'].status == 'ok') {
                         //console.log(data['subsonic-response']);
                         var artistHtml = subAPI.buildArtistView(data['subsonic-response'].artists.index);
-                        $("#artistReplace").replaceWith(artistHtml);
+                        $("#artistReplace").replaceWith(artistHtml[0]);
+                        //set artist info for amplitude
+                        $("#artistSlidePlaceholder").replaceWith(artistHtml[1]);
                         //set click event on artists
                         setArtistNameClickEvent();
 
@@ -97,9 +99,12 @@ function SubsonicAPI() {
             $.get(getURL, function(data) {
                     if(data['subsonic-response'].status == 'ok') {
                         console.log(data['subsonic-response']);
-                        var albumHtml = subAPI.buildAlbumView(data['subsonic-response'].artist.album);
+                        var albumHtml = [];
+                        albumHtml = subAPI.buildAlbumView(data['subsonic-response'].artist.album);
+
                         //var artistHtml = subAPI.buildArtistView(data['subsonic-response'].indexes.index);
-                        $("#albumList").replaceWith(albumHtml);
+                        $("#albumList").replaceWith(albumHtml[0]);
+                        $("#albumSlidePlaceholder").replaceWith(albumHtml[1]);
                         setAlbumNameClickEvent();
                         setAlbumLoadAndPlayClickEvent();
                         //set button to green so we know the status
@@ -352,11 +357,19 @@ function SubsonicAPI() {
 
     //builds a list of id to artists from json
     this.buildArtistView = function(artistJson) {
-        var htmlToReturn = '<ul id="artistList" class="list-unstyled">';
+        var htmlToReturn = [];
+        var artistStartViewOpen = '<div class="artist-container">' +
+                                '<div class="artist">';
+        var artistStartViewClose = '</div> </div>';
+
+        var artistSlideHtml;
+
+        htmlToReturn[0] = '<ul id="artistList" class="list-unstyled">';
         //loop over the first list, A, B, C, ect
         $.each(artistJson, function(index, artistArray) {
+
             //add letter as additional li
-            htmlToReturn += '<ul id="artist' + artistArray.name + '" class="list-unstyled">' + artistArray.name;
+            htmlToReturn[0] += '<ul id="artist' + artistArray.name + '" class="list-unstyled">' + artistArray.name;
             //console.log(artistArray.name);
             //now loop thrown the artist array
             $.each(artistArray, function(x, artists) {
@@ -367,15 +380,20 @@ function SubsonicAPI() {
                 }
                 //console.log('x' + x);
                 $.each(artists, function(y, artist){
+                    artistSlideHtml += artistStartViewOpen;
                     //final loop that has the individual artist info
-                    htmlToReturn += '<li id="' + artist.id +'" class="artistName">' + artist.name + '</li>';
+                    htmlToReturn[0] += '<li id="' + artist.id +'" class="artistName">' + artist.name + '</li>';
+                    artistSlideHtml += '<div id="' + artist.id +'" class="artistName">'+artist.name+"</div>";
+                    artistSlideHtml += artistStartViewClose;
                 });
-                htmlToReturn += '<li>';
+                htmlToReturn[0] += '<li>';
 
             });
-            htmlToReturn += '</ul>';
+            htmlToReturn[0] += '</ul>';
         });
-        htmlToReturn += '</ul>';
+        htmlToReturn[0] += '</ul>';
+
+        htmlToReturn[1] = artistSlideHtml;
         return htmlToReturn;
 
     }
@@ -384,16 +402,28 @@ function SubsonicAPI() {
 
      //builds the album list
      this.buildAlbumView = function(albumJson) {
-        var htmlToReturn = '<ul id="albumList" class="list-unstyled">';
+        var albumSlideHtml = '';
+        var albumSlideOpen = '<div class="album-container">';
+        var albumSlideImage = '<img src="images/theweatherman.jpg" />';
+        var albumSlideMeta = '<div class="album-meta">';
+        var albumSlideClose = '</div> </div>';
+        var htmlToReturn = [];
+        htmlToReturn[0] = '<ul id="albumList" class="list-unstyled">';
+
         //loop over the albums and order them
         $.each(albumJson, function(index, album) {
-            htmlToReturn += '<span class="link glyphicon glyphicon-play albumPlay pull-left"></span>' +
+            albumSlideHtml += albumSlideOpen + albumSlideImage + albumSlideMeta;
+            albumSlideHtml += '<div class="artist">' + album.artist + '</div>';
+            albumSlideHtml += '<div id="album' + album.id + '"  albumId="' + album.id +' class="album-info albumName">' + album.name + '</div>';
+            albumSlideHtml += albumSlideClose;
+            htmlToReturn[0] += '<span class="link glyphicon glyphicon-play albumPlay pull-left"></span>' +
                             '<li id="album' + album.id +'" albumId="' + album.id +'" class="link albumName list-unstyled ">' + album.name +
                             '<span id="playAlbum' + album.id + '" class="hidden"><!--albumPlayQueueContentHere--></span>'+
                             '</li>';
             console.log(album.name);
         })
-        htmlToReturn += '</ul>';
+        htmlToReturn[0] += '</ul>';
+        htmlToReturn[1] = albumSlideHtml;
         return htmlToReturn;
      }
 
@@ -481,6 +511,10 @@ function setArtistNameClickEvent() {
         subAPI.getCreds();
         subAPI.getArtistInfo(subAPI, $(this).attr("id"))
         $("#" + $(this).attr("id")).addClass("lowlightText");
+        //hide the artist pane and show the album pane
+        $("#artistPane").hide();
+        $("#albumPane").show();
+
     });
 
 }
