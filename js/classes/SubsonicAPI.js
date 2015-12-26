@@ -282,7 +282,7 @@ function SubsonicAPI() {
                     $(".album-display").fadeIn( "slow", function() {
                             // Animation complete
                             $(this).css("background-color", swatches[swatch].getHex());
-                    }
+                    });
 
 
                 }
