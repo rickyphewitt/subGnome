@@ -9,6 +9,8 @@
 		<link rel="stylesheet" type="text/css" href="css/styles.css"/>
 		<!--md5 jquery plugin thanks-> blueimp:  https://github.com/placemarker/jQuery-MD5 -->
 		<script src="js/plugins/jquery.md5.js"></script>
+		<!-- color pallet plugin thanks-> jariz: https://github.com/jariz/vibrant.js.git -->
+		 <script src="js/plugins/Vibrant.js"></script>
 	</head>
 	<body>
 		<div id="large-player">
@@ -99,12 +101,12 @@
 			<!-- Begin Right Content -->
 			<div id="right-content">
 				<div class="album-display">
-					<div class="album-header">
+					<div id="album-header" class="album-header">
 						<span id="albumHeaderPlaceholder"></span><!--Dynamic Album Header Here-->
 						<!-- <img src="images/theweatherman.jpg"/>
 						<div class="album-artist">Gregory Alan Isakov</div> -->
 					</div>
-					<div class="album-details">
+					<div id="album-details"class="album-details">
 						<span id="albumDetailsPlaceholder"></span><!--Dynamic Album Details Here-->
 						<!-- <img class="album-art" src="images/theweatherman.jpg"/>
 						<div class="album-contents">
@@ -304,8 +306,8 @@
 			<div class="row">
 				<div class="col-md-8 col-md-offset-2">
 					<div class="form-group">
-						<label for="subPassword">Password</label>
 						<input id="subPassword"type="password" class="form-control textCenter" value="">
+						<label for="subPassword">Password</label>
 					</div>
 				</div>
 			</div>

@@ -22,6 +22,15 @@ function SubsonicAPI() {
 
     }
 
+    //check if the response from subsonic api is successful
+    this.checkResponseStatus = function(response) {
+        if(data['subsonic-response'].status == 'ok') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     //connects (pings the server with the creds
     this.checkStatus = function(subAPI, view) {
         var connectedToServer = false;
@@ -100,7 +109,7 @@ function SubsonicAPI() {
                     if(data['subsonic-response'].status == 'ok') {
                         console.log(data['subsonic-response']);
                         var albumHtml = [];
-                        albumHtml = subAPI.buildAlbumView(data['subsonic-response'].artist.album);
+                        albumHtml = subAPI.buildAlbumView(subAPI, data['subsonic-response'].artist.album);
 
                         //var artistHtml = subAPI.buildArtistView(data['subsonic-response'].indexes.index);
                         $("#albumList").replaceWith(albumHtml[0]);
@@ -140,8 +149,8 @@ function SubsonicAPI() {
                     $("#ampPlaylistInfo").attr("ampJSON", amplitudeSongContentsArray[0]);
                     $("#ampPlaylistInfo").attr("ampHTML", amplitudeSongContentsArray[1]);
 
-                    $("#albumHeaderPlaceholder").replaceWith(amplitudeSongContentsArray[2]);
-                    $("#albumDetailsPlaceholder").replaceWith(amplitudeSongContentsArray[3]);
+                    $("#album-header").html(amplitudeSongContentsArray[2]);
+                    $("#album-details").html(amplitudeSongContentsArray[3]);
 
 
                     //var artistHtml = subAPI.buildArtistView(data['subsonic-response'].indexes.index);
@@ -165,6 +174,12 @@ function SubsonicAPI() {
 
         });
     }
+
+
+    // //gets minimal album info. E.g. album art
+    // this.getMinimalAlbumInfo = function(subAPI, albumId) {
+    //     checkResponseStatus
+    // }
 
 
 
@@ -233,19 +248,71 @@ function SubsonicAPI() {
         var amplitudeInfo = [];
         var playQueueHTML = '';
         var playQueueJSON = '';
+        var currentIndex = 0;
+        var albumArtURL = noAlbumArtURL();
+        var songListHtml = '<ul id="albumSongList">';
 
-        var fullPlayerSingleAlbumHeader = '<img src="'+subAPI.URL('getCoverArt.view', songJson[0].coverArt)+'" />\n';
+
+
+        //check album art for initial view
+        if(!checkUndefined(songJson[0].coverArt)) {
+            albumArtURL = subAPI.URL('getCoverArt.view', songJson[0].coverArt);
+        }
+
+        var fullPlayerSingleAlbumHeader = '<img src="'+albumArtURL+'" />\n';
         fullPlayerSingleAlbumHeader += '<div class="album-artist">' + songJson[0].artist + '</div>\n';
 
-        var fullPlayerSingleAlbumDetails = '<img class="album-art" src="'+subAPI.URL('getCoverArt.view', songJson[0].coverArt)+'" />\n';
+        var fullPlayerSingleAlbumDetails = '<img class="album-art" src="'+albumArtURL+'" />\n';
         fullPlayerSingleAlbumDetails += '<div class="album-contents">\n';
         fullPlayerSingleAlbumDetails += '<div class="title">' + songJson[0].album + '</div>\n';
 
-        var currentIndex = 0;
-        var defaultAlbumArt = 'images/no-cover-large.png';
-        var songListHtml = '<ul id="albumSongList">';
+
+        var img = new Image()
+        img.setAttribute('src', albumArtURL);
+        img.crossOrigin = "Anonymous";
+
+        img.addEventListener('load', function() {
+            var vibrant = new Vibrant(img);
+            var swatches = vibrant.swatches()
+            for (var swatch in swatches) {
+                if (swatches.hasOwnProperty(swatch) && swatches[swatch]) {
+                    console.log(swatch, swatches[swatch].getHex())
+
+                    //set color of css
+                    $(".album-display").fadeIn( "slow", function() {
+                            // Animation complete
+                            $(this).css("background-color", swatches[swatch].getHex());
+                    }
+
+
+                }
+
+            break;
+
+
+            }
+
+            /*
+             * Results into:
+             * Vibrant #7a4426
+             * Muted #7b9eae
+             * DarkVibrant #348945
+             * DarkMuted #141414
+             * LightVibrant #f3ccb4
+             */
+
+        });
+
 
         $.each(songJson, function(index, song) {
+
+
+            //check album art
+            if(!checkUndefined(song.coverArt)) {
+                albumArtURL = subAPI.URL('getCoverArt.view', song.coverArt);
+            }
+
+
 
             console.log('SongInfo' + song);
             //convert seconds to minutes & seconds
@@ -257,7 +324,7 @@ function SubsonicAPI() {
             singleSongJSON += '"album" : "' + song.album + '" ,';
             singleSongJSON += '"url" : "' + subAPI.URL('stream.view', song.id) + '",';
             singleSongJSON += '"live" : "false",';
-            singleSongJSON += '"cover_art_url" : "'+subAPI.URL('getCoverArt.view', song.coverArt)+'",';
+            singleSongJSON += '"cover_art_url" : "'+albumArtURL+'",';
             singleSongJSON += '"duration_minutes" : "'+durrationOfSong[0]+'",';
             singleSongJSON += '"duration_seconds" : "'+durrationOfSong[1]+'",';
             singleSongJSON += '"duration_total" : "'+durrationOfSong[2]+'"';
@@ -273,7 +340,7 @@ function SubsonicAPI() {
 
             //Create the HTML for apmplitude
             singleSongHTML = '<div class="amplitude-song-container amplitude-play-pause playlist-item" amplitude-song-index="'+ currentIndex +'"> \n';
-            singleSongHTML += '<img src="' + subAPI.URL('getCoverArt.view', song.coverArt) + '" class="album-art"/>';
+            singleSongHTML += '<img src="' + albumArtURL + '" class="album-art"/>';
             singleSongHTML += '<div class="playlist-meta"> \n';
             singleSongHTML += '<div class="now-playing-title">' + song.title + '</div>\n';
             singleSongHTML += '<div class="album-information">' + song.artist + ' - ' + song.album + '</span></div>\n';
@@ -289,12 +356,13 @@ function SubsonicAPI() {
             //full player
             fullPlayerSingleAlbumDetails += '<div class="song-title amplitude-song-container amplitude-play-pause playlist-item" amplitude-song-index="'+ currentIndex +'"> \n';
             fullPlayerSingleAlbumDetails += '<img src="images/now-playing.png"/>' + song.title + '</div>';
-            fullPlayerSingleAlbumDetails + '</div><!--.album-contents--></div><!--.album-details-->';
 
 
             //imcrement index
             currentIndex++;
         });
+
+        fullPlayerSingleAlbumDetails += '</div><!--.album-contents--></div><!--.album-details-->';
 
         //remove last character (,) before wrapping json
         playQueueJSON = playQueueJSON.substring(0, playQueueJSON.length - 1);
@@ -426,17 +494,26 @@ function SubsonicAPI() {
 
 
      //builds the album list
-     this.buildAlbumView = function(albumJson) {
+     this.buildAlbumView = function(subAPI, albumJson) {
         var albumSlideHtml = '';
         var albumSlideOpen = '<div class="album-container">';
-        var albumSlideImage = '<img src="images/theweatherman.jpg" />';
+        var albumSlideImage = '';
         var albumSlideMeta = '<div class="album-meta">';
         var albumSlideClose = '</div> </div>';
         var htmlToReturn = [];
         htmlToReturn[0] = '<ul id="albumList" class="list-unstyled">';
 
         //loop over the albums and order them
+
         $.each(albumJson, function(index, album) {
+            //check if album art is undefined
+            if(checkUndefined(album.coverArt)) {
+                albumSlideImage = '<img src="'+noAlbumArtURL()+'">';
+            } else {
+                albumSlideImage = '<img src="'+subAPI.URL('getCoverArt.view', album.coverArt)+'">';
+
+            }
+
             albumSlideHtml += albumSlideOpen + albumSlideImage + albumSlideMeta;
             albumSlideHtml += '<div id="album' + album.id + '"  albumId="' + album.id +'" class="album-info albumName">' + album.name + '</div>';
             albumSlideHtml += '<div class="artist">' + album.artist + '</div>';
@@ -449,14 +526,9 @@ function SubsonicAPI() {
         })
         htmlToReturn[0] += '</ul>';
         htmlToReturn[1] = albumSlideHtml;
+        console.log('htmlToRetur1n: ' + htmlToReturn[1]);
         return htmlToReturn;
      }
-
-     //builds a playable queue
-     this.buildPlayQueueFromAlbum= function(albumJson) {
-
-     }
-
 
 
     //returns a url for the api based on view
@@ -510,7 +582,20 @@ function SubsonicAPI() {
 }
 
 
+//returns default url for noAlbumArtImage
+function noAlbumArtURL() {
+    return 'images/noAlbumArt.png';
+}
 
+
+ //checks if var is undefined
+function checkUndefined(varToCheck) {
+     if(varToCheck == undefined) {
+         return true;
+     } else {
+         return false;
+     }
+ }
 
 
 
