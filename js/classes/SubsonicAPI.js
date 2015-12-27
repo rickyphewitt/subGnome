@@ -86,8 +86,6 @@ function SubsonicAPI() {
 
                     } else {
                         console.log('Failed to get Indexes in function: getArtists');
-                        //$("#checkServer").addClass("btn-default").removeClass("btn-success");
-                        //$("#statusbar").addClass("bg-info").removeClass("bg-success");
                     }
 
             });
@@ -116,9 +114,8 @@ function SubsonicAPI() {
                         $("#albumSlidePlaceholder").replaceWith(albumHtml[1]);
                         setAlbumNameClickEvent();
                         setAlbumLoadAndPlayClickEvent();
-                        //set button to green so we know the status
-                        //$("#checkServer").addClass("btn-success").removeClass("btn-default");
-                        //$("#statusbar").addClass("bg-success").removeClass("bg-info");
+                        //set the image listeners for getting swatches
+                        setAlbumPaneImgLoadEvent();
 
                     } else {
                        console.log('Failed to get Artist in function: getArtistInfo');
@@ -174,12 +171,6 @@ function SubsonicAPI() {
 
         });
     }
-
-
-    // //gets minimal album info. E.g. album art
-    // this.getMinimalAlbumInfo = function(subAPI, albumId) {
-    //     checkResponseStatus
-    // }
 
 
 
@@ -256,7 +247,7 @@ function SubsonicAPI() {
 
         //check album art for initial view
         if(!checkUndefined(songJson[0].coverArt)) {
-            albumArtURL = subAPI.URL('getCoverArt.view', songJson[0].coverArt);
+            albumArtURL = subAPI.URL('getCoverArt.view', songJson[0].coverArt, 100);
         }
 
         var fullPlayerSingleAlbumHeader = '<img src="'+albumArtURL+'" />\n';
@@ -267,49 +258,12 @@ function SubsonicAPI() {
         fullPlayerSingleAlbumDetails += '<div class="title">' + songJson[0].album + '</div>\n';
 
 
-        var img = new Image()
-        img.setAttribute('src', albumArtURL);
-        img.crossOrigin = "Anonymous";
-
-        img.addEventListener('load', function() {
-            var vibrant = new Vibrant(img);
-            var swatches = vibrant.swatches()
-            for (var swatch in swatches) {
-                if (swatches.hasOwnProperty(swatch) && swatches[swatch]) {
-                    console.log(swatch, swatches[swatch].getHex())
-
-                    //set color of css
-                    $(".album-display").fadeIn( "slow", function() {
-                            // Animation complete
-                            $(this).css("background-color", swatches[swatch].getHex());
-                    });
-
-
-                }
-
-            break;
-
-
-            }
-
-            /*
-             * Results into:
-             * Vibrant #7a4426
-             * Muted #7b9eae
-             * DarkVibrant #348945
-             * DarkMuted #141414
-             * LightVibrant #f3ccb4
-             */
-
-        });
-
-
         $.each(songJson, function(index, song) {
 
 
             //check album art
             if(!checkUndefined(song.coverArt)) {
-                albumArtURL = subAPI.URL('getCoverArt.view', song.coverArt);
+                albumArtURL = subAPI.URL('getCoverArt.view', song.coverArt, 100);
             }
 
 
@@ -436,7 +390,7 @@ function SubsonicAPI() {
             songListHtml += '<li id="' + song.id + '" class="songName" streamURL="' +
                             subAPI.URL('stream.view', song.id) + '" streamType="' +
                             song.contentType + '" coverArt="'+
-                            subAPI.URL('getCoverArt.view', song.coverArt)+'">' +
+                            subAPI.URL('getCoverArt.view', song.coverArt, 100)+'">' +
                             song.title + '</li>';
             //this html5 audo info will not be visible to the user, but will be used to play
             //the album
@@ -508,9 +462,9 @@ function SubsonicAPI() {
         $.each(albumJson, function(index, album) {
             //check if album art is undefined
             if(checkUndefined(album.coverArt)) {
-                albumSlideImage = '<img src="'+noAlbumArtURL()+'">';
+                albumSlideImage = '<img class="albumPaneImg" albumId="' + album.id + '" src="'+noAlbumArtURL()+'">';
             } else {
-                albumSlideImage = '<img src="'+subAPI.URL('getCoverArt.view', album.coverArt)+'">';
+                albumSlideImage = '<img class="albumPaneImg" albumId="' + album.id + '" src="'+subAPI.URL('getCoverArt.view', album.coverArt, 50)+'">';
 
             }
 
@@ -523,6 +477,7 @@ function SubsonicAPI() {
                             '<span id="playAlbum' + album.id + '" class="hidden"><!--albumPlayQueueContentHere--></span>'+
                             '</li>';
             console.log(album.name);
+
         })
         htmlToReturn[0] += '</ul>';
         htmlToReturn[1] = albumSlideHtml;
@@ -541,6 +496,10 @@ function SubsonicAPI() {
         return this.server + '/rest/' + view + '?u=' + this.username + '&t=' + this.token + '&s=' + this.salt + '&id=' + id + '&c=subGnome' + '&v=1.13.1&f=json';
     }
 
+    //returns a url for the api based on view, and an ID, and a size (images)
+    this.URL = function(view, id, size) {
+        return this.server + '/rest/' + view + '?u=' + this.username + '&t=' + this.token + '&s=' + this.salt + '&id=' + id +  '&size=' + size +'&c=subGnome' + '&v=1.13.1&f=json';
+    }
 
     //gets id of album
     this.getAlbumIdFromId = function(id) {
@@ -585,6 +544,69 @@ function SubsonicAPI() {
 //returns default url for noAlbumArtImage
 function noAlbumArtURL() {
     return 'images/noAlbumArt.png';
+}
+
+
+//returns swatches from an image
+function getSwatchesFromImage(img) {
+    var swatches = Array();
+        var vibrant = new Vibrant(img);
+        return vibrant.swatches();
+}
+
+//get swatch hex if avaialble by using the below names
+//      * Results into:
+//      * Vibrant #7a4426
+//      * Muted #7b9eae
+//      * DarkVibrant #348945
+//      * DarkMuted #141414
+//      * LightVibrant #f3ccb4
+function getSwatchHexByName(swatchName, swatches) {
+    //set a default color like white
+    var defaultColor = "white";
+    //check if the one chosen is defined
+    if(swatches.Vibrant != undefined) {
+        return swatches.Vibrant.getHex();
+    } else {
+        return defaultColor;
+    }
+}
+
+//sets the event listener for an image, and sets
+//the vibrant attribute on the element with the domId
+//that is passed in
+function setVibrantEventListener(imgSrc, swatchName, domId) {
+    var swatches;
+    var swatchHex;
+    var img = new Image();
+    img.setAttribute('src', imgSrc);
+    //setting crossOrigin to anonymous to get around tainted canvas issue
+    img.crossOrigin = "Anonymous";
+    //add event listener
+    //when its loaded, get the swatches
+    img.addEventListener('load', function() {
+        swatches = getSwatchesFromImage(img);
+        //now need to get the "vibrant" one and set as attribute on album
+        swatchHex = getSwatchHexByName(swatchName, swatches);
+        $("#album"+domId).attr('swatch', swatchHex);
+
+    });
+}
+
+
+function setAlbumPaneImgLoadEvent() {
+
+    $(".albumPaneImg").each(function(i, obj){
+        var albumId = $(this).attr('albumId');
+        var imgSrc = $(this).attr('src');
+        console.dir($(this));
+        console.log("IMG SURC" + imgSrc);
+
+        setVibrantEventListener(imgSrc, 'Vibrant', albumId);
+
+    });
+    //set swatch lookup and swatch attribute on callback
+    // setVibrantEventListener(albumSlideImage, 'Vibrant', album.id);
 }
 
 
@@ -670,6 +692,13 @@ function setAlbumNameClickEvent() {
         subAPI.getAlbumInfo(subAPI, albumId, false);
         $("#" + $(this).attr("id")).addClass("lowlightText");
 
+        var swatchHex = $(this).attr("swatch");
+        //set the background album header to match vibrant color of album
+        //set color of css
+        $(".album-header").fadeIn( "slow", function() {
+                // Animation complete
+                $(this).css("background-color", swatchHex);
+        });
 
     });
 }
@@ -715,6 +744,8 @@ function setAlbumPlayClickEvent() {
         var albumId = subAPI.getAlbumIdFromId($(this).attr("id"));
         subAPI.getCreds();
         subAPI.playAlbum(subAPI, 'playAlbum' + albumId)
+
+
 
     });
 }
