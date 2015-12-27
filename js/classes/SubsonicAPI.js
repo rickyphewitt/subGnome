@@ -247,11 +247,18 @@ function SubsonicAPI() {
 
         //check album art for initial view
         if(!checkUndefined(songJson[0].coverArt)) {
-            albumArtURL = subAPI.URL('getCoverArt.view', songJson[0].coverArt, 100);
+            albumArtURL = subAPI.URL('getCoverArt.view', songJson[0].coverArt, 200);
         }
 
         var fullPlayerSingleAlbumHeader = '<img src="'+albumArtURL+'" />\n';
         fullPlayerSingleAlbumHeader += '<div class="album-artist">' + songJson[0].artist + '</div>\n';
+        fullPlayerSingleAlbumHeader += '<div class="artistMediaControls">';
+        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/bullhorn-2x.png" title="Start '+ songJson[0].artist +' Radio">';
+        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/action-redo-2x.png" title="Play Next">';
+        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/plus-2x.png" title="Add To Playlist">';
+        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/random-2x.png" title="Shuffle Album">';
+        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/media-play-2x.png" title="Play Album">';
+        fullPlayerSingleAlbumHeader += '</div>';
 
         var fullPlayerSingleAlbumDetails = '<img class="album-art" src="'+albumArtURL+'" />\n';
         fullPlayerSingleAlbumDetails += '<div class="album-contents">\n';
@@ -263,7 +270,7 @@ function SubsonicAPI() {
 
             //check album art
             if(!checkUndefined(song.coverArt)) {
-                albumArtURL = subAPI.URL('getCoverArt.view', song.coverArt, 100);
+                albumArtURL = subAPI.URL('getCoverArt.view', song.coverArt, 200);
             }
 
 
@@ -390,7 +397,7 @@ function SubsonicAPI() {
             songListHtml += '<li id="' + song.id + '" class="songName" streamURL="' +
                             subAPI.URL('stream.view', song.id) + '" streamType="' +
                             song.contentType + '" coverArt="'+
-                            subAPI.URL('getCoverArt.view', song.coverArt, 100)+'">' +
+                            subAPI.URL('getCoverArt.view', song.coverArt, 200)+'">' +
                             song.title + '</li>';
             //this html5 audo info will not be visible to the user, but will be used to play
             //the album

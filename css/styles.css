@@ -55,12 +55,19 @@ body{
 }
 
 /*
+    Clears
+*/
+.clear {
+    clear: both;
+}
+
+/*
     Large Player
 */
 div#large-player{
     margin: auto;
     margin-top: 20px;
-    width: 960px;
+    width: 970px;
     height: 400px;
     background-color: white;
     border-radius: 5px;
@@ -343,7 +350,8 @@ div#right-content{
     background-color: white;
     float: left;
     height: 330px;
-    width: 660px;
+    width: 670px;
+    overflow-y: scroll;
 }
 div.album-display{
     width: 100%;
@@ -369,6 +377,22 @@ div.album-header div.album-artist{
     font-size: 20px;
     padding-left: 20px;
 }
+
+div.album-header .artistMediaControls img{
+    float: right;
+    padding-top: 10px;
+    color: white;
+    font-family: "Helvetica", sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    padding-right: 10px;
+    padding-left: 10px;
+    height: auto;
+    width: auto;
+}
+
+
+
 div#the-weatherman-header{
     background-color: rgb(201, 197, 180);
 }
