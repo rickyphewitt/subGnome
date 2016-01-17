@@ -148,13 +148,21 @@ function SubsonicAPI() {
 
                     $("#album-header").html(amplitudeSongContentsArray[2]);
                     $("#album-details").html(amplitudeSongContentsArray[3]);
-
+                    //$("#album-details").attr("ampAlbumJSON", amplitudeSongContentsArray[0]);
+                    console.log(amplitudeSongContentsArray[0]);
+                    var nowPlaying = JSON.parse(amplitudeSongContentsArray[0]);
+                    Amplitude.playNow(nowPlaying);
 
                     //var artistHtml = subAPI.buildArtistView(data['subsonic-response'].indexes.index);
                     $("#albumSongList").replaceWith(songHtml[0]);
                     setSongNameClickEvent();
                     //set album play queue
                     $('#playAlbum' + albumId).html(songHtml[1])
+                    //hide now playing if open and show album
+                    showAlbumContent();
+
+
+
                     //set album play click event
                     setAlbumPlayClickEvent();
                     //mark currently selected album
@@ -163,6 +171,9 @@ function SubsonicAPI() {
                     if(play == true) {
                         subAPI.playAlbum(subAPI, 'playAlbum' + albumId)
                     }
+
+                    //set duration of active song:
+                    setDurationOfActiveSong();
 
                 } else {
                    console.log('Failed to get Artist in function: getArtistInfo');
@@ -290,17 +301,18 @@ function SubsonicAPI() {
             singleSongJSON += '"duration_seconds" : "'+durrationOfSong[1]+'",';
             singleSongJSON += '"duration_total" : "'+durrationOfSong[2]+'"';
 
-            singleSongJSON += '},';
+            singleSongJSON += '}';
 
             console.log('SingleSongJSON: ' + singleSongJSON);
 
-            playQueueJSON = playQueueJSON + singleSongJSON;
-
-
-
+            //check if this is the first iteration. if so, capture the first song to play
+            if(currentIndex == 0) {
+                playQueueJSON = singleSongJSON;
+            }
 
             //Create the HTML for apmplitude
             singleSongHTML = '<div class="amplitude-song-container amplitude-play-pause playlist-item" amplitude-song-index="'+ currentIndex +'"> \n';
+            singleSongHTML += '<span class="amplitudeSongJSON" style="display: none;">' + singleSongJSON + '</span> \n';
             singleSongHTML += '<img src="' + albumArtURL + '" class="album-art"/>';
             singleSongHTML += '<div class="playlist-meta"> \n';
             singleSongHTML += '<div class="now-playing-title">' + song.title + '</div>\n';
@@ -316,6 +328,7 @@ function SubsonicAPI() {
 
             //full player
             fullPlayerSingleAlbumDetails += '<div class="song-title amplitude-song-container amplitude-play-pause playlist-item" amplitude-song-index="'+ currentIndex +'"> \n';
+            fullPlayerSingleAlbumDetails += '<span class="amplitudeSongJSON" style="display: none;">' + singleSongJSON + '</span> \n';
             fullPlayerSingleAlbumDetails += '<img src="images/now-playing.png"/>' + song.title + '</div>';
 
 
@@ -325,11 +338,6 @@ function SubsonicAPI() {
 
         fullPlayerSingleAlbumDetails += '</div><!--.album-contents--></div><!--.album-details-->';
 
-        //remove last character (,) before wrapping json
-        playQueueJSON = playQueueJSON.substring(0, playQueueJSON.length - 1);
-        //wrap in song JSON
-        playQueueJSON = '{"debug": true, "songs": ['+ playQueueJSON +'],'+subAPI.registerCallbacks(subAPI)+'}';
-        console.log('NewplayQueueJSON' + playQueueJSON);
         amplitudeInfo[0] = playQueueJSON;
 
 
@@ -641,6 +649,10 @@ $("#checkServer").click(function() {
     //now get artists
 });
 
+
+
+
+
 setBreadcrumbLibraryClickEvent();
 
 //wrapper function to set library breadcrumbs
@@ -689,8 +701,6 @@ function setAlbumNameClickEvent() {
     //click event that is added to each album to return songs when clicked
     $(".albumName").click(function() {
 
-        //remove existing chosen album css
-        $("#albumList").find(".lowlightText").removeClass("lowlightText");
         var subAPI = new SubsonicAPI();
         //var albumId = subAPI.getAlbumIdFromId($(this).attr("Id"));
         var albumId = $(this).attr("albumId");
@@ -755,4 +765,11 @@ function setAlbumPlayClickEvent() {
 
 
     });
+}
+
+
+//shows album playlist pane if hidden
+function showAlbumContent() {
+    $("#now-playing-display").hide();
+    $("#album-display").show();
 }

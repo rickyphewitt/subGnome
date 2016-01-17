@@ -61,6 +61,58 @@ body{
     clear: both;
 }
 
+
+/*
+    CSS Table
+*/
+.table{
+    display: table;
+}
+
+.tableHeader{
+    display: table-header-group;
+}
+
+.tableBody{
+    display: table-row-group;
+}
+
+
+.tableRow{
+    display: table-row;
+}
+
+.tableCell{
+    display: table-cell;
+    width: auto;
+}
+.headerCell{
+    padding: 5px;
+}
+/*
+    Play Queue
+*/
+div#play-queue-details {
+    padding-top: 30px;
+    height: 100%;
+    width: 100%;
+}
+
+div#play-queue-header{
+    background-color: #ececec;
+    border-right: 1px solid #d9dada;
+    font-family: "Helvetica", sans-serif;
+    padding-top: 5px;
+}
+
+div#play-queue-body{
+    color: #606060;
+    font-size: 14px;
+    font-family: "Helvetica", sans-serif;
+    font-weight: 400;
+    line-height: 20px;
+}
+
 /*
     Large Player
 */
@@ -389,6 +441,7 @@ div.album-header .artistMediaControls img{
     padding-left: 10px;
     height: auto;
     width: auto;
+    cursor: pointer;
 }
 
 
@@ -453,5 +506,11 @@ div#footer{
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
     background-color: #dcdddc;
-    width: 960px;
+    width: 970px;
+}
+
+div#footer img{
+    float: right;
+    padding: 5px;
+    cursor: pointer;
 }

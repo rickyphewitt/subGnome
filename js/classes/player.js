@@ -1,112 +1,161 @@
-function Player() {
-    this.defaultPlayerStart = '<audio id="player" preload="auto" controls autoplay>';
-    this.defaultPlayerEnd = 'Your browser does not support the audio element.</audio>';
 
-    //returns the html for a default player
-    this.defaultPlayer = function(source) {
-        return this.defaultPlayerStart + source + this.defaultPlayerEnd;
+
+
+
+
+
+
+
+
+
+
+
+/*****************************************************************************
+*
+* Song Next/Prev Functionality
+*
+******************************************************************************/
+//logic that switches active song to next or previous song
+function nextSong(isPrev) {
+    //get the single song JSON for curently playing song
+    //@ToDo dig deeper into amp and current implementation as this
+    //bug is probably created by the implementation
+    var firstSongAmpHackIndex = $('.amplitude-active-song-container').attr('amplitude-song-index');
+    var activeSong = $('.amplitude-active-song-container').first();
+
+
+
+    var nextElement
+    //check if isPrev is set
+    if(isPrev) {
+        nextElement = activeSong.prev();
+    } else {
+        nextElement = activeSong.next();
     }
-    //wraps a sources in a source tag
-    this.newSong = function(streamURL, type) {
-    	return '<source src="' + streamURL + '" type="' + type + '" />';
+
+
+    var songToPlay;
+
+    //check if there is a next element, loop
+    if(!nextElement.hasClass('amplitude-song-container')) {
+        // console.log('should only fire on last element');
+        firstSongAmpHackIndex = 0;
+        nextElement =  $('.amplitude-song-container').first();
+        songToPlay = JSON.parse(nextElement.find('span').text());
+    } else {
+        songToPlay = JSON.parse(nextElement.find('span').text());
+
     }
 
+    Amplitude.playNow(songToPlay);
 
+    nextElement.addClass('amplitude-active-song-container');
+    activeSong.removeClass('amplitude-active-song-container');
+    if(firstSongAmpHackIndex != 0 && nextElement.attr('amplitude-song-index') != 0) {
+        $('.amplitude-song-container').first().removeClass('amplitude-active-song-container')
+    }
 
+    if(isPrev && nextElement.attr('amplitude-song-index') == 0) {
+        nextElement.addClass('amplitude-active-song-container');
+    }
 
-}
+    //set duration of song
+    setDurationOfActiveSong();
 
-//Sets an existing players source
-function setExistingPlayerSource(sourceId, source, type) {
-	$(sourceId).attr("src", source);
-	$(sourceId).attr("type", type);
-}
-
-
-//function starts a new song
-function startNewSong(playerId) {
-	var player = $(playerId);
-	player[0].pause();
-    player[0].load();
-    player[0].oncanplaythrough = player[0].play();
-}
-
-//function plays the next/previous song
-function playNextPrevious(playlistId, nextOrPrevious) {
-	var newSongSource 	= '';
-	var newSongType 	= '';
-	//find the curreintly playing song via the id
-	console.log('Playing: ' + nextOrPrevious);
-	var currentPlaylist = $(playlistId);
-	//console.log(currentlyPlayingSong);
-	if(nextOrPrevious == "next") {
-		console.log("lenghtNext: " + currentPlaylist.find(".text-success").next().length);
-		//check if there is a next
-		if(currentPlaylist.find(".text-success").next().length < 1) {
-			//no next element, so skip to top element
-			currentPlaylist.children().first().addClass("text-success");
-			currentPlaylist.find(".text-success").last().removeClass("text-success");
-		} else {
-			currentPlaylist.find(".text-success").next().addClass("text-success");
-			currentPlaylist.find(".text-success").first().removeClass("text-success");
-			
-		}
-	} else {
-		if(currentPlaylist.find(".text-success").prev().length < 1) {
-			//no previous element, play current element
-			//and no class manipulation is needed
-
-		} else {
-			currentPlaylist.find(".text-success").prev().addClass("text-success");
-			currentPlaylist.find(".text-success").last().removeClass("text-success");
-		}
-		console.log("lenghtPrev: " + currentPlaylist.find(".text-success").prev().length);
-		
-
-		
-		
-	}
-
-	//set audio source and type
-	newSongSource = currentPlaylist.find(".text-success").first().attr("streamURL");
-	newSongType = currentPlaylist.find(".text-success").first().attr("streamType");
-
-	//set source on player and play song
-	console.log('newSongSource: ' + newSongSource);
-	console.log('newSongType: ' + newSongType);
-	setExistingPlayerSource("#nowPlayingSource", newSongSource, newSongType);
-	startNewSong("#player");
-
-	
 }
 
 
 
 
 
+/************ Next/Prev song bindings ************/
 
+//sets binding for next
+$('.custom-next').click(function(){
+    nextSong(false);
+});
 
-
-
-//Click bind events for class start here
-
-
-//click events to play next song
-$("#playerNext").click(function() {
-	playNextPrevious("#playlist", "next");
-	startNewSong("#player");
+//sets binding for previous
+$('.custom-prev').click(function(){
+        nextSong(true);
 });
 
 
-//click events to play prev song
-$("#playerPrev").click(function() {
-	playNextPrevious("#playlist", "prev");
-	startNewSong("#player");
-});
 
-//click events for ended song
-$("#player").bind('ended', function(){
-	console.log('SongEnded');
-    playNextPrevious("#playlist", "next");
-	startNewSong("#player");
-});
+
+
+
+
+
+/*****************************************************************************
+*
+* Song Duration Functionality
+*
+******************************************************************************/
+
+
+
+
+function setDurationOfActiveSong() {
+    //get song and album name to use as id for min/sec duration
+    var currentSongMetadata = Amplitude.getActiveSongMetadata();
+    console.log(currentSongMetadata	);
+    //set the current playing seconds/minutes
+    //it seems amplitude does this for some songs, automatically
+    //but does not seem to be the case for subsonic streams
+    $(".amplitude-duration-minutes").first().text(currentSongMetadata.duration_minutes);
+    $(".amplitude-duration-seconds").first().text(currentSongMetadata.duration_seconds);
+    //also reset the width slider
+    $(".amplitude-song-time-visualization-status").first().width("0");
+
+    var timer = setTimeout(updateSongTimeVisualizationStatus, 1000);
+
+}
+
+//looks at the current play time in seconds, then updates the
+//visualizer width to show for both middle and large bars
+function updateSongTimeVisualizationStatus() {
+    var currentSongMetadata = Amplitude.getActiveSongMetadata();
+    //Set slider
+    console.log("total:" +currentSongMetadata.duration_total);
+    var currentPlayTimeInSeconds = getCurrentTotalPlayTimeInSeconds();
+    var incrementSlider = 341 / currentSongMetadata.duration_total;
+
+    //next update
+    var visualUpdate = Number((currentPlayTimeInSeconds * incrementSlider));
+
+    //check if the song is playing
+    if($("#play-pause").hasClass("amplitude-paused")) {
+        //do not update as music is paused
+    } else {
+        //if music is playing, update slider
+        $(".amplitude-song-time-visualization-status")[0].style.width = visualUpdate + "px";
+    }
+
+    function getCurrentTotalPlayTimeInSeconds() {
+        return Number((parseInt(getCurrentPlayTimeMinutesInSeconds()) + parseInt(getCurrentPlayTimeInSeconds())));
+    }
+
+    function getCurrentPlayTimeMinutesInSeconds() {
+        var currentMinutes = $(".amplitude-current-minutes").first().text();
+        //change to seeconds
+        return currentMinutes * 60;
+    }
+
+    function getCurrentPlayTimeInSeconds() {
+        return $(".amplitude-current-seconds").first().text();
+    }
+
+    //check if song has ended based on current time and total time
+    //if so move to next song
+    if((getCurrentTotalPlayTimeInSeconds() + 1) >= currentSongMetadata.duration_total) {
+        console.log('Song has ended!');
+        nextSong(false);
+    }
+
+    timer = setTimeout(updateSongTimeVisualizationStatus, 960);
+    //clear previous timer
+    clearTimeout(timer-1);
+    //should implement a more elegant solution:
+    //http://stackoverflow.com/questions/2814919/does-the-browser-keep-track-of-active-timer-ids
+}

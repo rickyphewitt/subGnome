@@ -26,9 +26,9 @@
 
 				<!-- Begin Controls -->
 				<div id="large-player-controls">
-					<div class="amplitude-prev" id="previous"></div>
+					<div class="custom-prev" id="previous"></div>
 					<div class="amplitude-play-pause amplitude-paused" amplitude-main-play-pause="true" id="play-pause"></div>
-					<div class="amplitude-next" id="next"></div>
+					<div class="custom-next" id="next"></div>
 				</div>
 				<!-- End Controls -->
 
@@ -100,13 +100,13 @@
 
 			<!-- Begin Right Content -->
 			<div id="right-content">
-				<div class="album-display">
+				<div id="album-display" class="album-display">
 					<div id="album-header" class="album-header">
 						<span id="albumHeaderPlaceholder"></span><!--Dynamic Album Header Here-->
 						<!-- <img src="images/theweatherman.jpg"/>
 						<div class="album-artist">Gregory Alan Isakov</div> -->
 					</div>
-					<div id="album-details"class="album-details">
+					<div id="album-details"class="album-details"	>
 						<span id="albumDetailsPlaceholder"></span><!--Dynamic Album Details Here-->
 						<!-- <img class="album-art" src="images/theweatherman.jpg"/>
 						<div class="album-contents">
@@ -119,126 +119,143 @@
 					</div>
 				</div>
 
-				<!--<div class="album-display the-weatherman-display">
-					<div class="album-header" id="the-weatherman-header">
-						<img src="images/theweatherman.jpg"/>
-						<div class="album-artist">Gregory Alan Isakov</div>
+				<div id="now-playing-display" style="display: none;">
+					<div id="now-playing-header" class="album-header">
+						<span id="albumHeaderPlaceholder"></span><!--Dynamic Album Header Here-->
+						<img src="images/openIconic/list-8x.png"/>
+						<div class="album-artist">Now Playing Queue</div>
 					</div>
-					<div class="album-details">
-						<img class="album-art" src="images/theweatherman.jpg"/>
-						<div class="album-contents">
-							<div class="title">The Weatherman</div>
-							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="0"><img src="images/now-playing.png"/>Living Proof</div>
-							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="3"><img src="images/now-playing.png"/>Amsterdam</div>
-							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="4"><img src="images/now-playing.png"/>Saint Valentine</div>
-							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="5"><img src="images/now-playing.png"/>Second Chances</div>
-						</div>
-					</div>
-				</div>-->
-				<!-- <div class="album-display rooms-for-adelaide-display">
-					<div class="album-header" id="rooms-for-adelaide-header">
-						<img src="images/roomsforadelaide.jpg"/>
-						<div class="album-artist">Mia and Jonah</div>
-					</div>
-					<div class="album-details">
-						<img class="album-art" src="images/roomsforadelaide.jpg"/>
-						<div class="album-contents">
-							<div class="title">Rooms for Adelaide</div>
-							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="1"><img src="images/now-playing.png"/>Rooms</div>
-						</div>
+					<div id="play-queue-details"class="table">
+						<div id="play-queue-header" class="tableHeader">
+							<div class="tableRow">
+								<div class="tableCell headerCell">
+									#
+								</div><!--.tableCell-->
+								<div class="tableCell headerCell">
+									Rating
+								</div><!--.tableCell-->
+								<div class="tableCell headerCell">
+									Title
+								</div><!--.tableCell-->
+								<div class="tableCell headerCell">
+									Artist
+								</div><!--.tableCell-->
+								<div class="tableCell headerCell">
+									Album
+								</div><!--.tableCell-->
+								<div class="tableCell headerCell">
+									Length
+								</div><!--.tableCell-->
+							</div><!--.tableRow-->
+						</div><!--#play-queue-header-->
+						<div id="play-queue-body" class="tableBody">
+							<div class="tableRow">
+								<div class="tableCell">
+									#
+								</div><!--.tableCell-->
+								<div class="tableCell">
+									Rating
+								</div><!--.tableCell-->
+								<div class="tableCell">
+									Title
+								</div><!--.tableCell-->
+								<div class="tableCell">
+									Artist
+								</div><!--.tableCell-->
+								<div class="tableCell">
+									Album
+								</div><!--.tableCell-->
+								<div class="tableCell">
+									Length
+								</div><!--.tableCell-->
+							</div><!--.tableRow-->
+						</div><!--#play-queue-body-->
+
+
+					</div><!--play-queue-details-->
+				</div>
+
+			<!--<div class="album-display the-weatherman-display">
+				<div class="album-header" id="the-weatherman-header">
+					<img src="images/theweatherman.jpg"/>
+					<div class="album-artist">Gregory Alan Isakov</div>
+				</div>
+				<div class="album-details">
+					<img class="album-art" src="images/theweatherman.jpg"/>
+					<div class="album-contents">
+						<div class="title">The Weatherman</div>
+						<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="0"><img src="images/now-playing.png"/>Living Proof</div>
+						<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="3"><img src="images/now-playing.png"/>Amsterdam</div>
+						<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="4"><img src="images/now-playing.png"/>Saint Valentine</div>
+						<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="5"><img src="images/now-playing.png"/>Second Chances</div>
 					</div>
 				</div>
-				<div class="album-display the-suburbs-display">
-					<div class="album-header" id="the-suburbs-header">
-						<img src="images/thesuburbs.jpeg"/>
-						<div class="album-artist">The Arcade Fire</div>
+			</div>-->
+			<!-- <div class="album-display rooms-for-adelaide-display">
+				<div class="album-header" id="rooms-for-adelaide-header">
+					<img src="images/roomsforadelaide.jpg"/>
+					<div class="album-artist">Mia and Jonah</div>
+				</div>
+				<div class="album-details">
+					<img class="album-art" src="images/roomsforadelaide.jpg"/>
+					<div class="album-contents">
+						<div class="title">Rooms for Adelaide</div>
+						<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="1"><img src="images/now-playing.png"/>Rooms</div>
 					</div>
-					<div class="album-details">
-						<img class="album-art" src="images/thesuburbs.jpeg"/>
-						<div class="album-contents">
-							<div class="title">The Suburbs</div>
-							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="2"><img src="images/now-playing.png"/>Suburban War</div>
-							<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="6"><img src="images/now-playing.png"/>City With No Children</div>
-						</div>
-					</div>
-				</div> -->
+				</div>
 			</div>
+			<div class="album-display the-suburbs-display">
+				<div class="album-header" id="the-suburbs-header">
+					<img src="images/thesuburbs.jpeg"/>
+					<div class="album-artist">The Arcade Fire</div>
+				</div>
+				<div class="album-details">
+					<img class="album-art" src="images/thesuburbs.jpeg"/>
+					<div class="album-contents">
+						<div class="title">The Suburbs</div>
+						<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="2"><img src="images/now-playing.png"/>Suburban War</div>
+						<div class="song-title amplitude-song-container amplitude-play-pause" amplitude-song-index="6"><img src="images/now-playing.png"/>City With No Children</div>
+					</div>
+				</div>
+			</div> -->
+		</div>
 			<!-- End Right Content -->
 
 			<!-- Begin Footer -->
 			<div id="footer">
-
+					<img id="nowPlayingIcon" src="images/openIconic/spreadsheet-2x.png" title="Now Playing">
 			</div>
 			<!-- End Footer -->
 		</div>
+		<div id="domCache" style="display: none;">
+			<!--TBDHolds an ever growing list of previously grabbed information-->
+		</div><!-- End Footer -->
 	</body>
 	<script type="text/javascript">
-		Amplitude.init({
-			"songs": [
-				{
-					"name": "Living Proof",
-					"artist": "Gregory Alan Isakov",
-					"album": "The Weatherman",
-					"url": "http://a1537.phobos.apple.com/us/r30/Music4/v4/60/af/eb/60afeba7-f8d9-a920-ff5b-b8666fdc2de4/mzaf_3379426683594665460.plus.aac.p.m4a",
-					"live": false,
-					"cover_art_url": "images/theweatherman.jpg"
-				},
-				{
-					"name": "Rooms",
-					"artist": "Mia and Jonah",
-					"album": "Rooms For Adelaide",
-					"url": "http://a656.phobos.apple.com/us/r30/Music/2d/d1/52/mzm.oymgnziu.aac.p.m4a",
-					"live": false,
-					"cover_art_url": "images/roomsforadelaide.jpg"
-				},
-				{
-					"name": "Suburban War",
-					"artist": "The Arcade Fire",
-					"album": "The Suburbs",
-					"url": "https://p.scdn.co/mp3-preview/f5b1bef707e8be7052a1efa5a39555c48e913d36",
-					"live": false,
-					"cover_art_url": "images/thesuburbs.jpeg"
-				},
-				{
-					"name": "Amsterdam",
-					"artist": "Gregory Alan Isakov",
-					"album": "The Weatherman",
-					"url": "http://a464.phobos.apple.com/us/r30/Music4/v4/4d/94/69/4d9469df-4b5c-31e1-a1b1-bc5b3421cb2d/mzaf_1227645205170517026.plus.aac.p.m4a",
-					"live": false,
-					"cover_art_url": "images/theweatherman.jpg"
-				},
-				{
-					"name": "Saint Valentine",
-					"artist": "Gregory Alan Isakov",
-					"album": "The Weatherman",
-					"url": "http://a1105.phobos.apple.com/us/r30/Music4/v4/2a/23/1d/2a231dec-3efb-f7a8-b190-b26f0790e8a6/mzaf_1799531085554015341.plus.aac.p.m4a",
-					"live": false,
-					"cover_art_url": "images/theweatherman.jpg"
-				},
-				{
-					"name": "Second Chances",
-					"artist": "Gregory Alan Isakov",
-					"album": "The Weatherman",
-					"url": "http://a1766.phobos.apple.com/us/r30/Music4/v4/de/2c/ae/de2caeb2-67a2-b19f-2b7e-f3aa38f69bfa/mzaf_4842981864723411733.plus.aac.p.m4a",
-					"live": false,
-					"cover_art_url": "images/theweatherman.jpg"
-				},
-				{
-					"name": "City WIth No Children",
-					"artist": "The Arcade Fire",
-					"album": "The Suburbs",
-					"url": "http://a1086.phobos.apple.com/us/r1000/099/Music/v4/6c/35/c3/6c35c369-b2c7-053d-04c3-6345bf9b62dd/mzaf_2986025997008722081.m4a",
-					"live": false,
-					"cover_art_url": "images/thesuburbs.jpeg"
-				}
-			],
-			"default_album_art": "images/no-cover-large.png",
+
+	Amplitude.init({
+		"dynamic_mode": true,
 			"callbacks": {
-				"after_init": "album_change",
-				"after_album_change": "album_change",
-				"after_song_ended": "album_change"
+				"after_init":"after_init_callback",
+		        "after_next":"after_next_callback",
+		        "after_prev":"after_prev_callback"
 			}
 		});
+
+		//callbacks
+
+		function after_init_callback() {
+			//setDurationOfActiveSong();
+		}
+
+		function after_next_callback() {
+			nextSong();
+			//setDurationOfActiveSong();
+		}
+
+		function after_prev_callback() {
+			//setDurationOfActiveSong();
+		}
 
 		function album_change(){
 			var activeSong = Amplitude.getActiveSongMetadata();
@@ -291,7 +308,7 @@
 				<div class="col-md-8 col-md-offset-2">
 					<div class="form-group foreground" >
 						<label for="subServer">Server Address</label>
-						<input id="subServer" type="text" class="textCenter form-control" value="http://subsonic:4040">
+						<input id="subServer" type="text" class="textCenter form-control" value="http://hewitt.subsonic.org">
 					</div>
 				</div>
 			</div>
@@ -325,7 +342,9 @@
 		<script src="js/classes/player.js"></script>
 		<script src="js/misc.js"></script>
 
+<script type="text/javascript">
 
+</script>
 
 
 
