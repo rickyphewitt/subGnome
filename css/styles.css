@@ -496,6 +496,21 @@ div.album-details div.album-contents div.song-title.amplitude-active-song-contai
 }
 
 /*
+    Playlist
+
+*/
+
+div.tableCell.playlistSongTitle.song-title img{
+    height: 10px;
+    padding: 1px;
+    display: none;
+}
+
+div.tableRow.amplitude-song-container.amplitude-play-pause.playlist-item.amplitude-active-song-container img {
+    display: inline;
+}
+
+/*
     Footer
 */
 div#footer{

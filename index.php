@@ -129,12 +129,6 @@
 						<div id="play-queue-header" class="tableHeader">
 							<div class="tableRow">
 								<div class="tableCell headerCell">
-									#
-								</div><!--.tableCell-->
-								<div class="tableCell headerCell">
-									Rating
-								</div><!--.tableCell-->
-								<div class="tableCell headerCell">
 									Title
 								</div><!--.tableCell-->
 								<div class="tableCell headerCell">
@@ -149,26 +143,6 @@
 							</div><!--.tableRow-->
 						</div><!--#play-queue-header-->
 						<div id="play-queue-body" class="tableBody">
-							<div class="tableRow">
-								<div class="tableCell">
-									#
-								</div><!--.tableCell-->
-								<div class="tableCell">
-									Rating
-								</div><!--.tableCell-->
-								<div class="tableCell">
-									Title
-								</div><!--.tableCell-->
-								<div class="tableCell">
-									Artist
-								</div><!--.tableCell-->
-								<div class="tableCell">
-									Album
-								</div><!--.tableCell-->
-								<div class="tableCell">
-									Length
-								</div><!--.tableCell-->
-							</div><!--.tableRow-->
 						</div><!--#play-queue-body-->
 
 

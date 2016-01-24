@@ -150,14 +150,13 @@ function SubsonicAPI() {
                     $("#album-details").html(amplitudeSongContentsArray[3]);
                     //$("#album-details").attr("ampAlbumJSON", amplitudeSongContentsArray[0]);
                     console.log(amplitudeSongContentsArray[0]);
-                    var nowPlaying = JSON.parse(amplitudeSongContentsArray[0]);
-                    Amplitude.playNow(nowPlaying);
+
 
                     //var artistHtml = subAPI.buildArtistView(data['subsonic-response'].indexes.index);
                     $("#albumSongList").replaceWith(songHtml[0]);
                     setSongNameClickEvent();
                     //set album play queue
-                    $('#playAlbum' + albumId).html(songHtml[1])
+                    $('#playAlbum' + albumId).html(songHtml[1]);
                     //hide now playing if open and show album
                     showAlbumContent();
 
@@ -169,7 +168,8 @@ function SubsonicAPI() {
                     $("#" + albumId).addClass("text-success");
                     //check if we should play the album
                     if(play == true) {
-                        subAPI.playAlbum(subAPI, 'playAlbum' + albumId)
+                        var nowPlaying = JSON.parse(amplitudeSongContentsArray[0]);
+                        Amplitude.playNow(nowPlaying);
                     }
 
                     //set duration of active song:
@@ -264,11 +264,11 @@ function SubsonicAPI() {
         var fullPlayerSingleAlbumHeader = '<img src="'+albumArtURL+'" />\n';
         fullPlayerSingleAlbumHeader += '<div class="album-artist">' + songJson[0].artist + '</div>\n';
         fullPlayerSingleAlbumHeader += '<div class="artistMediaControls">';
-        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/bullhorn-2x.png" title="Start '+ songJson[0].artist +' Radio">';
-        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/action-redo-2x.png" title="Play Next">';
-        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/plus-2x.png" title="Add To Playlist">';
-        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/random-2x.png" title="Shuffle Album">';
-        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/media-play-2x.png" title="Play Album">';
+        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/bullhorn-2x.png" title="Start '+ songJson[0].artist +' Radio" class="startArtistRadio">';
+        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/action-redo-2x.png" title="Play Next" class="playRadio">';
+        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/plus-2x.png" title="Add To Playlist" class="addToPlaylist">';
+        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/random-2x.png" title="Shuffle Album" class="shuffleAlbum">';
+        fullPlayerSingleAlbumHeader += '<img src="images/openIconic/media-play-2x.png" title="Play Album" class="playAlbum">';
         fullPlayerSingleAlbumHeader += '</div>';
 
         var fullPlayerSingleAlbumDetails = '<img class="album-art" src="'+albumArtURL+'" />\n';
@@ -327,7 +327,7 @@ function SubsonicAPI() {
 
 
             //full player
-            fullPlayerSingleAlbumDetails += '<div class="song-title amplitude-song-container amplitude-play-pause playlist-item" amplitude-song-index="'+ currentIndex +'"> \n';
+            fullPlayerSingleAlbumDetails += '<div class="song-title albumSong" amplitude-song-index="'+ currentIndex +'"> \n';
             fullPlayerSingleAlbumDetails += '<span class="amplitudeSongJSON" style="display: none;">' + singleSongJSON + '</span> \n';
             fullPlayerSingleAlbumDetails += '<img src="images/now-playing.png"/>' + song.title + '</div>';
 
@@ -696,29 +696,7 @@ function getArtistBreadcrumb(artistName) {
     return '<span id="breadcrumArtist" class="crumbs"> > ' + artistName + '</span>';
 }
 
-//wrapper function so click events to the album name can be added when loaded from server
-function setAlbumNameClickEvent() {
-    //click event that is added to each album to return songs when clicked
-    $(".albumName").click(function() {
 
-        var subAPI = new SubsonicAPI();
-        //var albumId = subAPI.getAlbumIdFromId($(this).attr("Id"));
-        var albumId = $(this).attr("albumId");
-        console.log("albumID: " + albumId);
-        subAPI.getCreds();
-        subAPI.getAlbumInfo(subAPI, albumId, false);
-        $("#" + $(this).attr("id")).addClass("lowlightText");
-
-        var swatchHex = $(this).attr("swatch");
-        //set the background album header to match vibrant color of album
-        //set color of css
-        $(".album-header").fadeIn( "slow", function() {
-                // Animation complete
-                $(this).css("background-color", swatchHex);
-        });
-
-    });
-}
 
 //wrapper function so click events to the song name can be added when loaded from server
 function setSongNameClickEvent() {
@@ -765,11 +743,4 @@ function setAlbumPlayClickEvent() {
 
 
     });
-}
-
-
-//shows album playlist pane if hidden
-function showAlbumContent() {
-    $("#now-playing-display").hide();
-    $("#album-display").show();
 }
